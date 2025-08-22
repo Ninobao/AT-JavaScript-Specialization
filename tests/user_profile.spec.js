@@ -33,7 +33,6 @@ test.describe("user profile", () => {
       page.getByText("Your profile is successfully updated!")
     ).toBeVisible();
   });
-
   //   test('user changes password', async ({ page }) => {
   //     const randomPasswordAppend = Date.now().toString().slice(-5);
 
