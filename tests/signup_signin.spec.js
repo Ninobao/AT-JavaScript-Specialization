@@ -11,6 +11,8 @@ test.describe("sign up/sign in tests", () => {
     // And the User is on the Registration page
     await page.locator('[data-test="register-link"]').click();
 
+    await page.waitForLoadState();
+
     // When the User fills all required fields with valid data
     await page.locator('[data-test="first-name"]').fill("FirstName");
     await page.locator('[data-test="last-name"]').fill("LastName");
@@ -22,20 +24,15 @@ test.describe("sign up/sign in tests", () => {
     await page.locator('[data-test="country"]').selectOption("MX");
     await page.locator('[data-test="phone"]').fill("123456");
     await page.locator('[data-test="email"]').fill(uniqueEmail);
-    // await page.locator('[data-test="email"]').fill("email@example.com");
     await page.locator('[data-test="password"]').fill("123_Tests");
 
     await page.locator('[data-test="register-submit"]').click();
 
     // Then the User gets redirected to the login page
-    await expect(page).toHaveURL(
-      "https://practicesoftwaretesting.com/auth/login"
-    );
+    await expect(page).toHaveURL("https://practicesoftwaretesting.com/auth/login");
   });
 
-  test("user writes an invalid Date of Birth when creating an account", async ({
-    page,
-  }) => {
+  test("invalid Date of Birth when creating an account", async ({ page }) => {
     const uniqueEmail = `user_${Date.now()}@example.com`;
 
     // Given the User does not have an account
@@ -55,7 +52,6 @@ test.describe("sign up/sign in tests", () => {
     await page.locator('[data-test="country"]').selectOption("MX");
     await page.locator('[data-test="phone"]').fill("123456");
     await page.locator('[data-test="email"]').fill(uniqueEmail);
-    // await page.locator('[data-test="email"]').fill('email@example.com');
     await page.locator('[data-test="password"]').fill("123_Tests");
 
     // But the Date of Birth is invalid
