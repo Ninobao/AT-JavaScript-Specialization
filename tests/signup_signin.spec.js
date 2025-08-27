@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+const { expect: chaiExpect } = require("chai");
 
 test.describe("sign up/sign in tests", () => {
   test("user creates an account", async ({ page }) => {
@@ -30,6 +31,10 @@ test.describe("sign up/sign in tests", () => {
 
     // Then the User gets redirected to the login page
     await expect(page).toHaveURL("https://practicesoftwaretesting.com/auth/login");
+    // Chai:
+    await page.waitForURL("https://practicesoftwaretesting.com/auth/login");
+    const loginURL = await page.url();
+    chaiExpect(loginURL).to.equal("https://practicesoftwaretesting.com/auth/login");
   });
 
   test("invalid Date of Birth when creating an account", async ({ page }) => {
@@ -65,5 +70,11 @@ test.describe("sign up/sign in tests", () => {
         hasText: "Please enter a valid date",
       })
     ).toBeVisible();
+    // Chai:
+    const dobError = await page.locator('[data-test="dob-error"]', {
+      hasText: "Please enter a valid date",
+    });
+    const dobErrorIsVisible = await dobError.isVisible();
+    chaiExpect(dobErrorIsVisible).to.be.true;
   });
 });
