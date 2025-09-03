@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { expect as chaiExpect } from "chai";
 
 test.describe("user profile", () => {
   test.beforeEach(async ({ page, context }) => {
@@ -22,10 +23,9 @@ test.describe("user profile", () => {
     try {
       await page.locator('[data-test="register-submit"]').click();
       await expect(page).toHaveURL("https://practicesoftwaretesting.com/auth/login");
-      console.log("cuenta creada");
+      console.log("Account created");
     } catch (err) {
-      await page.getByText("A customer with this email address already exists.");
-      console.log("la cuenta ya estaba creada");
+      console.log("The account was already created");
     }
 
     // Given the user is logged
@@ -33,7 +33,9 @@ test.describe("user profile", () => {
     await page.locator('[data-test="email"]').fill("email@example.com");
     await page.locator('[data-test="password"]').fill("123_Tests");
     await page.locator('[data-test="login-submit"]').click();
-    await expect(page).toHaveURL("https://practicesoftwaretesting.com/account");
+    await page.waitForURL("https://practicesoftwaretesting.com/account");
+    const accountURL = page.url();
+    chaiExpect(accountURL).to.equal("https://practicesoftwaretesting.com/account");
   });
 
   test("user updates the profile", async ({ page }) => {
@@ -41,11 +43,22 @@ test.describe("user profile", () => {
 
     // And the User is on the Profile page
     await page.locator('[data-test="nav-profile"]').click();
-    await expect(page).toHaveURL("https://practicesoftwaretesting.com/account/profile");
+
+    await page.waitForURL("https://practicesoftwaretesting.com/account/profile");
+    const profileURL = page.url();
+    chaiExpect(profileURL).to.equal("https://practicesoftwaretesting.com/account/profile");
 
     // When the User updates "Street" and "Postal code" fields with valid data
-    await expect(page.locator('[data-test="street"]')).toHaveValue(/.+/);
-    await expect(page.locator('[data-test="postal_code"]')).toHaveValue(/.+/);
+    const streetField = page.locator('[data-test="street"]');
+    await page.waitForLoadState("networkidle");
+    const streetValue = await streetField.inputValue();
+    chaiExpect(streetValue).to.match(/.+/);
+
+    const postalCodeField = page.locator('[data-test="postal_code"]');
+    const postalCodeValue = await postalCodeField.inputValue();
+    chaiExpect(postalCodeValue).to.match(/.+/);
+
+    // Adding new Street and Postal Code:
     await page.locator('[data-test="street"]').fill("Arcos " + `${randomAppend}`);
     await page.locator('[data-test="postal_code"]').fill(randomAppend);
 
@@ -53,6 +66,9 @@ test.describe("user profile", () => {
     await page.locator('[data-test="update-profile-submit"]').click();
 
     // Then the message "Your profile is successfully updated!" is displayed
-    await expect(page.getByText("Your profile is successfully updated!")).toBeVisible();
+    const profileUpdatedMsg = page.getByText("Your profile is successfully updated!");
+    await profileUpdatedMsg.waitFor({ state: "visible" });
+    const updateMsgVisible = await profileUpdatedMsg.isVisible();
+    chaiExpect(updateMsgVisible).to.be.true;
   });
 });

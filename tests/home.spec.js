@@ -1,4 +1,6 @@
 import { test, expect } from "@playwright/test";
+import chai from "chai";
+chai.should();
 
 test.describe("home page", () => {
   test.beforeEach(async ({ page, context }) => {
@@ -22,10 +24,9 @@ test.describe("home page", () => {
     try {
       await page.locator('[data-test="register-submit"]').click();
       await expect(page).toHaveURL("https://practicesoftwaretesting.com/auth/login");
-      console.log("cuenta creada");
+      console.log("Account created");
     } catch (err) {
-      await page.getByText("A customer with this email address already exists.");
-      console.log("la cuenta ya estaba creada");
+      console.log("The account was already created");
     }
 
     // Given the user is logged
@@ -33,23 +34,31 @@ test.describe("home page", () => {
     await page.locator('[data-test="email"]').fill("email@example.com");
     await page.locator('[data-test="password"]').fill("123_Tests");
     await page.locator('[data-test="login-submit"]').click();
-    await expect(page).toHaveURL("https://practicesoftwaretesting.com/account");
+    await page.waitForURL("https://practicesoftwaretesting.com/account");
+    const accountURL = page.url();
+    accountURL.should.equal("https://practicesoftwaretesting.com/account");
   });
 
   test("Showing products according to filters", async ({ page }) => {
     // And the User is on the Home page
     await page.goto("/");
+    await page.waitForLoadState();
 
     // When the User adds only the "Tool Belts" filter
-    await expect(page.getByRole("checkbox", { name: "Tool Belts" })).toBeVisible();
-    await page.getByRole("checkbox", { name: "Tool Belts" }).check();
+    const checkboxToolBelts = page.getByRole("checkbox", { name: "Tool Belts" });
+    await checkboxToolBelts.waitFor({ state: "visible" });
+    const checkboxVisible = await checkboxToolBelts.isVisible();
+    checkboxVisible.should.be.true;
+
+    await checkboxToolBelts.check();
 
     // Then only the "Leather toolbelt" product will be shown
-    await expect(
-      page.locator('[data-test="product-name"]', {
-        hasText: "Leather toolbelt",
-      })
-    ).toBeVisible();
+    const toolBelt = page.locator('[data-test="product-name"]', {
+      hasText: "Leather toolbelt",
+    });
+    await toolBelt.waitFor({ state: "visible" });
+    const toolBeltvisible = await toolBelt.isVisible();
+    toolBeltvisible.should.be.true;
   });
 
   test("Not showing products according to filters", async ({ page }) => {
@@ -57,14 +66,19 @@ test.describe("home page", () => {
     await page.goto("/");
 
     // When the User adds only the "Workbench" filter
-    await expect(page.getByRole("checkbox", { name: "Workbench" })).toBeVisible();
-    await page.getByRole("checkbox", { name: "Workbench" }).check();
+    const checkboxWorkbench = page.getByRole("checkbox", { name: "Workbench" });
+    await checkboxWorkbench.waitFor({ state: "visible" });
+    const checkboxWorkbenchVisible = await checkboxWorkbench.isVisible();
+    checkboxWorkbenchVisible.should.be.true;
+
+    await checkboxWorkbench.check();
 
     // Then the "There are no products found." message is displayed
-    await expect(
-      page.locator('[data-test="no-results"]', {
-        hasText: "There are no products found.",
-      })
-    ).toBeVisible();
+    const noProducts = page.locator('[data-test="no-results"]', {
+      hasText: "There are no products found.",
+    });
+    await noProducts.waitFor({ state: "visible" });
+    const noProductsVisible = await noProducts.isVisible();
+    noProductsVisible.should.be.true;
   });
 });
