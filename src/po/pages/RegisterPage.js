@@ -15,6 +15,10 @@ class RegisterPage extends BasePage {
     this.email = page.locator('[data-test="email"]');
     this.password = page.locator('[data-test="password"]');
     this.registerBtn = page.locator('[data-test="register-submit"]');
+
+    this.dobError = page.locator('[data-test="dob-error"]', {
+      hasText: "Please enter a valid date",
+    });
   }
 
   async createAccount(
@@ -28,8 +32,7 @@ class RegisterPage extends BasePage {
     country,
     phone,
     email,
-    password,
-    registerBtn
+    password
   ) {
     await this.firstName.fill(firstName);
     await this.lastName.fill(lastName);

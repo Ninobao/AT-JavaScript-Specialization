@@ -1,6 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { assert } from "chai";
 
+import RegisterPage from "../src/po/pages/RegisterPage";
+
 test.describe("product details page", () => {
   test.beforeEach(async ({ page, context }) => {
     await context.clearCookies();
