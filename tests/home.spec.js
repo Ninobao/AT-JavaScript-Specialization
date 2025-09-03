@@ -24,10 +24,9 @@ test.describe("home page", () => {
     try {
       await page.locator('[data-test="register-submit"]').click();
       await expect(page).toHaveURL("https://practicesoftwaretesting.com/auth/login");
-      console.log("cuenta creada");
+      console.log("Account created");
     } catch (err) {
-      await page.getByText("A customer with this email address already exists.");
-      console.log("la cuenta ya estaba creada");
+      console.log("The account was already created");
     }
 
     // Given the user is logged
@@ -35,8 +34,6 @@ test.describe("home page", () => {
     await page.locator('[data-test="email"]').fill("email@example.com");
     await page.locator('[data-test="password"]').fill("123_Tests");
     await page.locator('[data-test="login-submit"]').click();
-    await expect(page).toHaveURL("https://practicesoftwaretesting.com/account");
-    // Chai should:
     await page.waitForURL("https://practicesoftwaretesting.com/account");
     const accountURL = await page.url();
     accountURL.should.equal("https://practicesoftwaretesting.com/account");
@@ -45,30 +42,23 @@ test.describe("home page", () => {
   test("Showing products according to filters", async ({ page }) => {
     // And the User is on the Home page
     await page.goto("/");
-
     await page.waitForLoadState();
 
     // When the User adds only the "Tool Belts" filter
-    await expect(page.getByRole("checkbox", { name: "Tool Belts" })).toBeVisible();
-    // Chai assert:
-    const checkboxVisible = await page.getByRole("checkbox", { name: "Tool Belts" }).isVisible();
+    const checkboxToolBelts = await page.getByRole("checkbox", { name: "Tool Belts" });
+    await checkboxToolBelts.waitFor({ state: "visible" });
+    const checkboxVisible = await checkboxToolBelts.isVisible();
     checkboxVisible.should.be.true;
 
-    await page.getByRole("checkbox", { name: "Tool Belts" }).check();
+    await checkboxToolBelts.check();
 
     // Then only the "Leather toolbelt" product will be shown
-    await expect(
-      page.locator('[data-test="product-name"]', {
-        hasText: "Leather toolbelt",
-      })
-    ).toBeVisible();
-    // Chai assert:
-    const toolbeltVisible = await page
-      .locator('[data-test="product-name"]', {
-        hasText: "Leather toolbelt",
-      })
-      .isVisible();
-    toolbeltVisible.should.be.true;
+    const toolBelt = await page.locator('[data-test="product-name"]', {
+      hasText: "Leather toolbelt",
+    });
+    await toolBelt.waitFor({ state: "visible" });
+    const toolBeltvisible = await toolBelt.isVisible();
+    toolBeltvisible.should.be.true;
   });
 
   test("Not showing products according to filters", async ({ page }) => {
@@ -76,25 +66,19 @@ test.describe("home page", () => {
     await page.goto("/");
 
     // When the User adds only the "Workbench" filter
-    await expect(page.getByRole("checkbox", { name: "Workbench" })).toBeVisible();
-    // Chai assert:
-    const checkboxVisible = await page.getByRole("checkbox", { name: "Workbench" }).isVisible();
-    checkboxVisible.should.be.true;
+    const checkboxWorkbench = await page.getByRole("checkbox", { name: "Workbench" });
+    await checkboxWorkbench.waitFor({ state: "visible" });
+    const checkboxWorkbenchVisible = await checkboxWorkbench.isVisible();
+    checkboxWorkbenchVisible.should.be.true;
 
-    await page.getByRole("checkbox", { name: "Workbench" }).check();
+    await checkboxWorkbench.check();
 
     // Then the "There are no products found." message is displayed
-    await expect(
-      page.locator('[data-test="no-results"]', {
-        hasText: "There are no products found.",
-      })
-    ).toBeVisible();
-    // Chai assert:
-    const noProductsVisible = await page
-      .locator('[data-test="no-results"]', {
-        hasText: "There are no products found.",
-      })
-      .isVisible();
+    const noProducts = await page.locator('[data-test="no-results"]', {
+      hasText: "There are no products found.",
+    });
+    await noProducts.waitFor({ state: "visible" });
+    const noProductsVisible = await noProducts.isVisible();
     noProductsVisible.should.be.true;
   });
 });
