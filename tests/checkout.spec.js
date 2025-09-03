@@ -34,7 +34,7 @@ test.describe("checkout page", () => {
     await page.locator('[data-test="password"]').fill("123_Tests");
     await page.locator('[data-test="login-submit"]').click();
     await page.waitForURL("https://practicesoftwaretesting.com/account");
-    const accountURL = await page.url();
+    const accountURL = page.url();
     chaiExpect(accountURL).to.equal("https://practicesoftwaretesting.com/account");
   });
 
@@ -44,21 +44,21 @@ test.describe("checkout page", () => {
     await page.waitForLoadState();
 
     // One Combination Pliers:
-    const pliers = await page.getByText("Combination Pliers");
+    const pliers = page.getByText("Combination Pliers");
     await pliers.waitFor({ state: "visible", timeout: 3500 });
     const pliersIsVisible = await pliers.isVisible();
     chaiExpect(pliersIsVisible).to.be.true;
 
     await pliers.click();
 
-    const addToCart = await page.locator('[data-test="add-to-cart"]');
+    const addToCart = page.locator('[data-test="add-to-cart"]');
     await addToCart.waitFor({ state: "visible", timeout: 3500 });
     const addToCartVisible = await addToCart.isVisible();
     chaiExpect(addToCartVisible).to.be.true;
 
     await addToCart.click();
 
-    const productAdded = await page.getByRole("alert", { name: "Product added to shopping" });
+    const productAdded = page.getByRole("alert", { name: "Product added to shopping" });
     await productAdded.waitFor({ state: "visible", timeout: 3500 });
     const productAddedVisible = await productAdded.isVisible();
     chaiExpect(productAddedVisible).to.be.true;
@@ -68,7 +68,7 @@ test.describe("checkout page", () => {
     await page.waitForLoadState();
 
     // Two Bolt Cutters
-    const boltCutters = await page.getByText("Bolt Cutters");
+    const boltCutters = page.getByText("Bolt Cutters");
     await boltCutters.waitFor({ state: "visible", timeout: 3500 });
     const boltCuttersVisible = await boltCutters.isVisible();
     chaiExpect(boltCuttersVisible).to.be.true;
@@ -76,27 +76,27 @@ test.describe("checkout page", () => {
     await boltCutters.click();
     await page.waitForLoadState();
 
-    const increase = await page.locator('[data-test="increase-quantity"]');
+    const increase = page.locator('[data-test="increase-quantity"]');
     await increase.waitFor({ state: "visible", timeout: 3500 });
     const increaseVisible = await increase.isVisible();
     chaiExpect(increaseVisible).to.be.true;
 
     await increase.click();
 
-    const addCart = await page.locator('[data-test="add-to-cart"]');
+    const addCart = page.locator('[data-test="add-to-cart"]');
     await addCart.waitFor({ state: "visible", timeout: 3500 });
     const addCartVisible = await addCart.isVisible();
     chaiExpect(addCartVisible).to.be.true;
 
     await addCart.click();
 
-    const productAdd = await page.getByRole("alert", { name: "Product added to shopping" });
+    const productAdd = page.getByRole("alert", { name: "Product added to shopping" });
     await productAdd.waitFor({ state: "visible", timeout: 3500 });
     const productAddVisible = await productAdd.isVisible();
     chaiExpect(productAddVisible).to.be.true;
 
     // When the User goes to the Checkout page
-    const navCart = await page.locator('[data-test="nav-cart"]');
+    const navCart = page.locator('[data-test="nav-cart"]');
     await navCart.waitFor({ state: "visible", timeout: 3500 });
     const navCartVisible = await navCart.isVisible();
     chaiExpect(navCartVisible).to.be.true;
@@ -108,19 +108,19 @@ test.describe("checkout page", () => {
     await page.waitForLoadState();
 
     // And the sub-total price of the Combination Pliers is $14.15
-    const linePrice1 = await page.locator('[data-test="line-price"]', { hasText: "$14.15" });
+    const linePrice1 = page.locator('[data-test="line-price"]', { hasText: "$14.15" });
     await linePrice1.waitFor({ state: "visible", timeout: 3500 });
     const linePrice1Visible = await linePrice1.isVisible();
     chaiExpect(linePrice1Visible).to.be.true;
 
     // And the sub-total price of the Bolt Cutters is $96.82
-    const linePrice2 = await page.locator('[data-test="line-price"]', { hasText: "$96.82" });
+    const linePrice2 = page.locator('[data-test="line-price"]', { hasText: "$96.82" });
     await linePrice2.waitFor({ state: "visible", timeout: 3500 });
     const linePrice2Visible = await linePrice2.isVisible();
     chaiExpect(linePrice2Visible).to.be.true;
 
     // Then the total price of the cart is $110.97
-    const cartTotal = await page.locator('[data-test="cart-total"]', { hasText: "$110.97" });
+    const cartTotal = page.locator('[data-test="cart-total"]', { hasText: "$110.97" });
     await cartTotal.waitFor({ state: "visible", timeout: 3500 });
     const cartTotalVisible = await cartTotal.isVisible();
     chaiExpect(cartTotalVisible).to.be.true;
@@ -128,7 +128,7 @@ test.describe("checkout page", () => {
     await page.waitForLoadState();
 
     // Empty the cart for future re-test
-    const emptyPliers = await page
+    const emptyPliers = page
       .getByRole("row", { name: "Combination Pliers  Quantity" })
       .locator("a");
     await emptyPliers.waitFor({ state: "visible", timeout: 3500 });
@@ -137,27 +137,25 @@ test.describe("checkout page", () => {
 
     await emptyPliers.click();
 
-    const productDeleted = await page.getByRole("alert", { name: "Product deleted." });
+    const productDeleted = page.getByRole("alert", { name: "Product deleted." });
     await productDeleted.waitFor({ state: "visible", timeout: 3500 });
     const productDeletedVisible = await productDeleted.isVisible();
     chaiExpect(productDeletedVisible).to.be.true;
 
-    const emptyBoltCutters = await page
-      .getByRole("row", { name: "Bolt Cutters Quantity" })
-      .locator("a");
+    const emptyBoltCutters = page.getByRole("row", { name: "Bolt Cutters Quantity" }).locator("a");
     await emptyBoltCutters.waitFor({ state: "visible", timeout: 3500 });
     const emptyBoltCuttersVisible = await emptyBoltCutters.isVisible();
     chaiExpect(emptyBoltCuttersVisible).to.be.true;
 
     await emptyBoltCutters.click();
 
-    const productDeleted2 = await page.getByRole("alert", { name: "Product deleted." });
+    const productDeleted2 = page.getByRole("alert", { name: "Product deleted." });
     await productDeleted2.waitFor({ state: "visible", timeout: 3500 });
     const productDeleted2Visible = await productDeleted2.isVisible();
     chaiExpect(productDeleted2Visible).to.be.true;
 
     // Cart completely empty:
-    const cartEmpty = await page.getByText("The cart is empty. Nothing to");
+    const cartEmpty = page.getByText("The cart is empty. Nothing to");
     await cartEmpty.waitFor({ state: "visible", timeout: 5000 });
     const cartEmptyVisible = await cartEmpty.isVisible();
     chaiExpect(cartEmptyVisible).to.be.true;

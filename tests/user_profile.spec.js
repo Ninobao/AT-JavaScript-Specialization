@@ -34,7 +34,7 @@ test.describe("user profile", () => {
     await page.locator('[data-test="password"]').fill("123_Tests");
     await page.locator('[data-test="login-submit"]').click();
     await page.waitForURL("https://practicesoftwaretesting.com/account");
-    const accountURL = await page.url();
+    const accountURL = page.url();
     chaiExpect(accountURL).to.equal("https://practicesoftwaretesting.com/account");
   });
 
@@ -54,7 +54,7 @@ test.describe("user profile", () => {
     const streetValue = await streetField.inputValue();
     chaiExpect(streetValue).to.match(/.+/);
 
-    const postalCodeField = await page.locator('[data-test="postal_code"]');
+    const postalCodeField = page.locator('[data-test="postal_code"]');
     const postalCodeValue = await postalCodeField.inputValue();
     chaiExpect(postalCodeValue).to.match(/.+/);
 
@@ -66,7 +66,7 @@ test.describe("user profile", () => {
     await page.locator('[data-test="update-profile-submit"]').click();
 
     // Then the message "Your profile is successfully updated!" is displayed
-    const profileUpdatedMsg = await page.getByText("Your profile is successfully updated!");
+    const profileUpdatedMsg = page.getByText("Your profile is successfully updated!");
     await profileUpdatedMsg.waitFor({ state: "visible" });
     const updateMsgVisible = await profileUpdatedMsg.isVisible();
     chaiExpect(updateMsgVisible).to.be.true;

@@ -63,7 +63,7 @@ test.describe("sign up/sign in tests", () => {
     await page.locator('[data-test="register-submit"]').click();
 
     // Then the message "Please enter a valid date in YYYY-MM-DD format." is displayed
-    const dobError = await page.locator('[data-test="dob-error"]', {
+    const dobError = page.locator('[data-test="dob-error"]', {
       hasText: "Please enter a valid date",
     });
     const dobErrorIsVisible = await dobError.isVisible();

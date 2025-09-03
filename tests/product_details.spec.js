@@ -34,7 +34,7 @@ test.describe("product details page", () => {
     await page.locator('[data-test="password"]').fill("123_Tests");
     await page.locator('[data-test="login-submit"]').click();
     await page.waitForURL("https://practicesoftwaretesting.com/account");
-    const accountURL = await page.url();
+    const accountURL = page.url();
     assert.equal(accountURL, "https://practicesoftwaretesting.com/account");
   });
 
@@ -43,7 +43,7 @@ test.describe("product details page", () => {
     await page.goto("account/favorites");
     await page.waitForLoadState();
 
-    const noFavoritesMessage = await page.getByText("There are no favorites yet.");
+    const noFavoritesMessage = page.getByText("There are no favorites yet.");
     await noFavoritesMessage.waitFor({ state: "visible" });
     const favoritesisVisible = await noFavoritesMessage.isVisible();
     assert.isTrue(
@@ -53,7 +53,7 @@ test.describe("product details page", () => {
 
     // And the User is on the Combination Pliers page
     await page.goto("/");
-    const combinationPliers = await page.getByText("Combination Pliers");
+    const combinationPliers = page.getByText("Combination Pliers");
     await combinationPliers.waitFor({ state: "visible" });
     const combinationPliersisVisible = await combinationPliers.isVisible();
     assert.isTrue(combinationPliersisVisible, "Expected Combination Pliers to be visible.");
@@ -63,7 +63,7 @@ test.describe("product details page", () => {
     // When the User adds the Combination Pliers to Favorites
     await page.locator('[data-test="add-to-favorites"]').click();
 
-    const addedAlertMessage = await page.getByRole("alert", {
+    const addedAlertMessage = page.getByRole("alert", {
       name: "Product added to your",
     });
     await addedAlertMessage.waitFor({ state: "visible" });
@@ -73,17 +73,17 @@ test.describe("product details page", () => {
     // And the Combination Pliers are shown in the Favorites page
     await page.goto("account/favorites");
     await page.waitForURL("https://practicesoftwaretesting.com/account/favorites");
-    const favoritesURL = await page.url();
+    const favoritesURL = page.url();
     assert.equal(favoritesURL, "https://practicesoftwaretesting.com/account/favorites");
 
-    const pliers = await page.getByText("Combination Pliers");
+    const pliers = page.getByText("Combination Pliers");
     await pliers.waitFor({ state: "visible" });
     const pliersisVisible = await pliers.isVisible();
     assert.isTrue(pliersisVisible, "Expected Combination Pliers to be visible.");
 
     // (Remove the product for future re-test)
     await page.locator('[data-test="delete"]').click();
-    const noFavsMessage = await page.getByText("There are no favorites yet.");
+    const noFavsMessage = page.getByText("There are no favorites yet.");
     await noFavsMessage.waitFor({ state: "visible" });
     const noFavsIsVisible = await noFavsMessage.isVisible();
     assert.isTrue(noFavsIsVisible, "Expected 'There are no favorites yet.' message to be visible");
@@ -94,7 +94,7 @@ test.describe("product details page", () => {
     await page.goto("/");
     await page.waitForLoadState();
 
-    const nosePliers = await page.getByText("Combination Pliers");
+    const nosePliers = page.getByText("Combination Pliers");
     await nosePliers.waitFor({ state: "visible" });
     const nosePliersIsVisible = await nosePliers.isVisible();
     assert.isTrue(nosePliersIsVisible, "Expected Long Nose Pliers to be visible.");
@@ -102,7 +102,7 @@ test.describe("product details page", () => {
     await page.getByText("Long Nose Pliers").click();
 
     // When the Long Nose Pliers page has the "Out of stock" message
-    const outOfStock = await page.locator('[data-test="out-of-stock"]');
+    const outOfStock = page.locator('[data-test="out-of-stock"]');
     await outOfStock.waitFor({ state: "visible" });
     const outOfStockIsVisible = await outOfStock.isVisible();
     assert.isTrue(outOfStockIsVisible, "Expected Out Of Stock message to be visible.");

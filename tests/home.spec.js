@@ -35,7 +35,7 @@ test.describe("home page", () => {
     await page.locator('[data-test="password"]').fill("123_Tests");
     await page.locator('[data-test="login-submit"]').click();
     await page.waitForURL("https://practicesoftwaretesting.com/account");
-    const accountURL = await page.url();
+    const accountURL = page.url();
     accountURL.should.equal("https://practicesoftwaretesting.com/account");
   });
 
@@ -45,7 +45,7 @@ test.describe("home page", () => {
     await page.waitForLoadState();
 
     // When the User adds only the "Tool Belts" filter
-    const checkboxToolBelts = await page.getByRole("checkbox", { name: "Tool Belts" });
+    const checkboxToolBelts = page.getByRole("checkbox", { name: "Tool Belts" });
     await checkboxToolBelts.waitFor({ state: "visible" });
     const checkboxVisible = await checkboxToolBelts.isVisible();
     checkboxVisible.should.be.true;
@@ -53,7 +53,7 @@ test.describe("home page", () => {
     await checkboxToolBelts.check();
 
     // Then only the "Leather toolbelt" product will be shown
-    const toolBelt = await page.locator('[data-test="product-name"]', {
+    const toolBelt = page.locator('[data-test="product-name"]', {
       hasText: "Leather toolbelt",
     });
     await toolBelt.waitFor({ state: "visible" });
@@ -66,7 +66,7 @@ test.describe("home page", () => {
     await page.goto("/");
 
     // When the User adds only the "Workbench" filter
-    const checkboxWorkbench = await page.getByRole("checkbox", { name: "Workbench" });
+    const checkboxWorkbench = page.getByRole("checkbox", { name: "Workbench" });
     await checkboxWorkbench.waitFor({ state: "visible" });
     const checkboxWorkbenchVisible = await checkboxWorkbench.isVisible();
     checkboxWorkbenchVisible.should.be.true;
@@ -74,7 +74,7 @@ test.describe("home page", () => {
     await checkboxWorkbench.check();
 
     // Then the "There are no products found." message is displayed
-    const noProducts = await page.locator('[data-test="no-results"]', {
+    const noProducts = page.locator('[data-test="no-results"]', {
       hasText: "There are no products found.",
     });
     await noProducts.waitFor({ state: "visible" });
