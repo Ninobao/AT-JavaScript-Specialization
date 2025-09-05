@@ -2,121 +2,109 @@ import { test, expect } from "@playwright/test";
 import { assert } from "chai";
 
 import RegisterPage from "../src/po/pages/RegisterPage";
+import LoginPage from "../src/po/pages/LoginPage";
+import FavoritesPage from "../src/po/pages/FavoritesPage";
+import HomePage from "../src/po/pages/HomePage";
+import ProductPage from "../src/po/pages/ProductPage";
 
 test.describe("product details page", () => {
-  test.beforeEach(async ({ page, context }) => {
+  test.beforeEach(async ({ page, context, baseURL }) => {
+    const registerPage = new RegisterPage(page);
+    const loginPage = new LoginPage(page);
+
     await context.clearCookies();
 
-    await page.goto("https://practicesoftwaretesting.com/auth/register");
+    await registerPage.navigateTo(baseURL + "/auth/register");
 
-    await page.waitForLoadState();
-    await page.locator('[data-test="first-name"]').fill("FirstName");
-    await page.locator('[data-test="last-name"]').fill("LastName");
-    await page.locator('[data-test="dob"]').fill("2000-01-01");
-    await page.locator('[data-test="street"]').fill("Arcos");
-    await page.locator('[data-test="postal_code"]').fill("20000");
-    await page.locator('[data-test="city"]').fill("Aguascalientes");
-    await page.locator('[data-test="state"]').fill("Ags");
-    await page.locator('[data-test="country"]').selectOption("MX");
-    await page.locator('[data-test="phone"]').fill("123456");
-    await page.locator('[data-test="email"]').fill("email@example.com");
-    await page.locator('[data-test="password"]').fill("123_Tests");
+    await registerPage.fillProfileFields({
+      firstName: "FirstName",
+      lastName: "LastName",
+      dateOfBirth: "2000-01-01",
+      street: "Arcos",
+      postalCode: "20000",
+      city: "Aguascalientes",
+      state: "Ags",
+      country: "MX",
+      phone: "123456",
+      email: "email@example.com",
+      password: "123_Tests",
+    });
 
     try {
-      await page.locator('[data-test="register-submit"]').click();
-      await expect(page).toHaveURL("https://practicesoftwaretesting.com/auth/login");
+      await registerPage.registerBtnClick();
+      await expect(page).toHaveURL(baseURL + "/auth/login");
       console.log("Account created");
     } catch (err) {
       console.log("The account was already created");
     }
 
     // Given the user is logged
-    await page.goto("/auth/login");
-    await page.locator('[data-test="email"]').fill("email@example.com");
-    await page.locator('[data-test="password"]').fill("123_Tests");
-    await page.locator('[data-test="login-submit"]').click();
-    await page.waitForURL("https://practicesoftwaretesting.com/account");
+    await loginPage.navigateTo(baseURL + "/auth/login");
+    await loginPage.enterCredentials("email@example.com", "123_Tests");
     const accountURL = page.url();
     assert.equal(accountURL, "https://practicesoftwaretesting.com/account");
   });
 
-  test("user adds a product to Favorites", async ({ page }) => {
-    // And the Combination Pliers product is not already in Favorites
-    await page.goto("account/favorites");
-    await page.waitForLoadState();
+  test("user adds a product to Favorites", async ({ page, baseURL }) => {
+    const favoritesPage = new FavoritesPage(page);
+    const homePage = new HomePage(page);
+    const productPage = new ProductPage(page);
 
-    const noFavoritesMessage = page.getByText("There are no favorites yet.");
-    await noFavoritesMessage.waitFor({ state: "visible" });
-    const favoritesisVisible = await noFavoritesMessage.isVisible();
-    assert.isTrue(
-      favoritesisVisible,
-      "Expected 'There are no favorites yet.' message to be visible"
-    );
+    // And the Combination Pliers product is not already in Favorites
+    await favoritesPage.navigateTo(baseURL + "/account/favorites");
+    const noFavsIsVisible = await favoritesPage.noFavoritesIsVisible();
+    assert.isTrue(noFavsIsVisible, "Expected 'There are no favorites yet.' message to be visible");
 
     // And the User is on the Combination Pliers page
-    await page.goto("/");
-    const combinationPliers = page.getByText("Combination Pliers");
-    await combinationPliers.waitFor({ state: "visible" });
-    const combinationPliersisVisible = await combinationPliers.isVisible();
-    assert.isTrue(combinationPliersisVisible, "Expected Combination Pliers to be visible.");
+    await homePage.navigateTo(baseURL);
+    const combinationPliersIsVisible = await homePage.productIsVisible("Combination Pliers");
+    assert.isTrue(combinationPliersIsVisible, "Expected 'Combination pliers.' to be visible");
 
-    await page.getByText("Combination Pliers").click();
+    await homePage.clickOnProduct("Combination Pliers");
 
     // When the User adds the Combination Pliers to Favorites
-    await page.locator('[data-test="add-to-favorites"]').click();
+    await productPage.addToFavoritesClick();
 
-    const addedAlertMessage = page.getByRole("alert", {
-      name: "Product added to your",
-    });
-    await addedAlertMessage.waitFor({ state: "visible" });
-    const addedIsVisible = await addedAlertMessage.isVisible();
-    assert.isTrue(addedIsVisible, "Expected alert 'Product added to your' to be visible");
+    // Then the message "Product added to your favorites list." is displayed
+    const addedToFavoritesVisible = await productPage.alertIsVisible("Product added to your");
+    assert.isTrue(addedToFavoritesVisible, "Expected alert 'Product added to your' to be visible");
 
     // And the Combination Pliers are shown in the Favorites page
-    await page.goto("account/favorites");
-    await page.waitForURL("https://practicesoftwaretesting.com/account/favorites");
-    const favoritesURL = page.url();
+    await favoritesPage.navigateTo(baseURL + "/account/favorites");
+    await favoritesPage.waitForURL(baseURL + "/account/favorites");
+    const favoritesURL = favoritesPage.getURL();
     assert.equal(favoritesURL, "https://practicesoftwaretesting.com/account/favorites");
 
-    const pliers = page.getByText("Combination Pliers");
-    await pliers.waitFor({ state: "visible" });
-    const pliersisVisible = await pliers.isVisible();
-    assert.isTrue(pliersisVisible, "Expected Combination Pliers to be visible.");
+    const combinationPliersIsFavorite = await favoritesPage.productIsVisible("Combination Pliers");
+    assert.isTrue(combinationPliersIsFavorite, "Expected Combination Pliers to be visible.");
 
     // (Remove the product for future re-test)
-    await page.locator('[data-test="delete"]').click();
-    const noFavsMessage = page.getByText("There are no favorites yet.");
-    await noFavsMessage.waitFor({ state: "visible" });
-    const noFavsIsVisible = await noFavsMessage.isVisible();
-    assert.isTrue(noFavsIsVisible, "Expected 'There are no favorites yet.' message to be visible");
+    await favoritesPage.deleteSingleFavorite();
+    const noFavsisVisible = await favoritesPage.noFavoritesIsVisible();
+    assert.isTrue(noFavsisVisible, "Expected 'There are no favorites yet.' message to be visible");
   });
 
-  test("add an out-of-stock product to the cart", async ({ page }) => {
+  test("add an out-of-stock product to the cart", async ({ page, baseURL }) => {
+    const favoritesPage = new FavoritesPage(page);
+    const homePage = new HomePage(page);
+    const productPage = new ProductPage(page);
+
     // And the User is on the Long Nose Pliers page
-    await page.goto("/");
-    await page.waitForLoadState();
+    await homePage.navigateTo(baseURL);
+    const longNosePliersIsVisible = await homePage.productIsVisible("Long Nose Pliers");
+    assert.isTrue(longNosePliersIsVisible, "Expected 'Combination pliers.' to be visible");
 
-    const nosePliers = page.getByText("Combination Pliers");
-    await nosePliers.waitFor({ state: "visible" });
-    const nosePliersIsVisible = await nosePliers.isVisible();
-    assert.isTrue(nosePliersIsVisible, "Expected Long Nose Pliers to be visible.");
-
-    await page.getByText("Long Nose Pliers").click();
+    await homePage.clickOnProduct("Long Nose Pliers");
 
     // When the Long Nose Pliers page has the "Out of stock" message
-    const outOfStock = page.locator('[data-test="out-of-stock"]');
-    await outOfStock.waitFor({ state: "visible" });
-    const outOfStockIsVisible = await outOfStock.isVisible();
+    const outOfStockIsVisible = await productPage.outOfStockIsVisible();
     assert.isTrue(outOfStockIsVisible, "Expected Out Of Stock message to be visible.");
 
     // Then the Quantity selector and the "Add to cart" button are disabled
-    const decreasedAttr = await page
-      .locator('[data-test="decrease-quantity"]')
-      .getAttribute("disabled");
+    const decreasedAttr = await productPage.getAttribute(productPage.decrease, "disabled");
     assert.strictEqual(decreasedAttr, "", "Expected 'disabled' attribute on decrease");
-    const increaseAttr = await page
-      .locator('[data-test="increase-quantity"]')
-      .getAttribute("disabled");
+
+    const increaseAttr = await productPage.getAttribute(productPage.increase, "disabled");
     assert.strictEqual(increaseAttr, "", "Expected 'disabled' attribute on increase");
   });
 });

@@ -2,7 +2,7 @@ import BasePage from "./BasePage";
 
 class RegisterPage extends BasePage {
   constructor(page) {
-    super(page, "auth/register");
+    super(page);
     this.firstName = page.locator('[data-test="first-name"]');
     this.lastName = page.locator('[data-test="last-name"]');
     this.dateOfBirth = page.locator('[data-test="dob"]');
@@ -21,30 +21,21 @@ class RegisterPage extends BasePage {
     });
   }
 
-  async createAccount(
-    firstName,
-    lastName,
-    dateOfBirth,
-    street,
-    postalCode,
-    city,
-    state,
-    country,
-    phone,
-    email,
-    password
-  ) {
-    await this.firstName.fill(firstName);
-    await this.lastName.fill(lastName);
-    await this.dateOfBirth.fill(dateOfBirth);
-    await this.street.fill(street);
-    await this.postalCode.fill(postalCode);
-    await this.city.fill(city);
-    await this.state.fill(state);
-    await this.country.selectOption(country);
-    await this.phone.fill(phone);
-    await this.email.fill(email);
-    await this.password.fill(password);
+  async fillProfileFields(profile) {
+    await this.firstName.fill(profile.firstName);
+    await this.lastName.fill(profile.lastName);
+    await this.dateOfBirth.fill(profile.dateOfBirth);
+    await this.street.fill(profile.street);
+    await this.postalCode.fill(profile.postalCode);
+    await this.city.fill(profile.city);
+    await this.state.fill(profile.state);
+    await this.country.selectOption(profile.country);
+    await this.phone.fill(profile.phone);
+    await this.email.fill(profile.email);
+    await this.password.fill(profile.password);
+  }
+
+  async registerBtnClick() {
     await this.registerBtn.click();
   }
 }

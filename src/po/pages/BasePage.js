@@ -1,25 +1,31 @@
-// import { expect } from "@playwright/test";
-
 class BasePage {
-  constructor(page, url) {
+  constructor(page) {
     this.page = page;
-    this.url = url;
   }
 
-  async navigateTo() {
-    await this.page.goto(this.url);
+  async navigateTo(url) {
+    await this.page.goto(url);
+    await this.page.waitForLoadState();
   }
 
-  // async waitForPageReady(selector) {
-  //   await this.page.waitForSelector(selector, { state: "visible" });
+  async waitForURL(url) {
+    await this.page.waitForURL(url);
+  }
+
+  getURL() {
+    return this.page.url();
+  }
+
+  async getAttribute(element, attribute) {
+    return await element.getAttribute(attribute);
+  }
+
+  // async waitForVisible(element) {
+  //   await element.waitFor({ state: "visible" });
   // }
 
-  // async expectTitleContains(text) {
-  //   await expect(this.page).toHaveTitle(new RegExp(text));
-  // }
-
-  // getLocator(selector) {
-  //   return this.page.locator(selector);
+  // async isVisible(element) {
+  //   await element.isVisible();
   // }
 }
 
