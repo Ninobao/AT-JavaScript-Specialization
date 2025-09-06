@@ -1,74 +1,72 @@
 import { test, expect } from "@playwright/test";
-import { expect as chaiExpect } from "chai";
+import { assert, expect as chaiExpect } from "chai";
+
+import RegisterPage from "../src/po/pages/RegisterPage";
+import LoginPage from "../src/po/pages/LoginPage";
+import AccountPage from "../src/po/pages/AccountPage";
+import ProfilePage from "../src/po/pages/ProfilePage";
 
 test.describe("user profile", () => {
-  test.beforeEach(async ({ page, context }) => {
+  test.beforeEach(async ({ page, context, baseURL }) => {
+    const registerPage = new RegisterPage(page);
+    const loginPage = new LoginPage(page);
+
     await context.clearCookies();
 
-    await page.goto("https://practicesoftwaretesting.com/auth/register");
+    await registerPage.navigateTo(baseURL + "/auth/register");
 
-    await page.waitForLoadState();
-    await page.locator('[data-test="first-name"]').fill("FirstName");
-    await page.locator('[data-test="last-name"]').fill("LastName");
-    await page.locator('[data-test="dob"]').fill("2000-01-01");
-    await page.locator('[data-test="street"]').fill("Arcos");
-    await page.locator('[data-test="postal_code"]').fill("20000");
-    await page.locator('[data-test="city"]').fill("Aguascalientes");
-    await page.locator('[data-test="state"]').fill("Ags");
-    await page.locator('[data-test="country"]').selectOption("MX");
-    await page.locator('[data-test="phone"]').fill("123456");
-    await page.locator('[data-test="email"]').fill("email@example.com");
-    await page.locator('[data-test="password"]').fill("123_Tests");
+    await registerPage.fillProfileFields({
+      firstName: "FirstName",
+      lastName: "LastName",
+      dateOfBirth: "2000-01-01",
+      street: "Arcos",
+      postalCode: "20000",
+      city: "Aguascalientes",
+      state: "Ags",
+      country: "MX",
+      phone: "123456",
+      email: "email@example.com",
+      password: "123_Tests",
+    });
 
     try {
-      await page.locator('[data-test="register-submit"]').click();
-      await expect(page).toHaveURL("https://practicesoftwaretesting.com/auth/login");
+      await registerPage.registerBtnClick();
+      await expect(page).toHaveURL(baseURL + "/auth/login");
       console.log("Account created");
     } catch (err) {
       console.log("The account was already created");
     }
 
     // Given the user is logged
-    await page.goto("/auth/login");
-    await page.locator('[data-test="email"]').fill("email@example.com");
-    await page.locator('[data-test="password"]').fill("123_Tests");
-    await page.locator('[data-test="login-submit"]').click();
-    await page.waitForURL("https://practicesoftwaretesting.com/account");
+    await loginPage.navigateTo(baseURL + "/auth/login");
+    await loginPage.enterCredentials("email@example.com", "123_Tests");
     const accountURL = page.url();
-    chaiExpect(accountURL).to.equal("https://practicesoftwaretesting.com/account");
+    assert.equal(accountURL, "https://practicesoftwaretesting.com/account");
   });
 
-  test("user updates the profile", async ({ page }) => {
-    const randomAppend = Date.now().toString().slice(-5);
+  test("user updates the profile", async ({ page, baseURL }) => {
+    const accountPage = new AccountPage(page);
+    const profilePage = new ProfilePage(page);
 
     // And the User is on the Profile page
-    await page.locator('[data-test="nav-profile"]').click();
-
-    await page.waitForURL("https://practicesoftwaretesting.com/account/profile");
-    const profileURL = page.url();
+    await accountPage.profileLinkClick();
+    const profileURL = profilePage.getURL();
     chaiExpect(profileURL).to.equal("https://practicesoftwaretesting.com/account/profile");
 
     // When the User updates "Street" and "Postal code" fields with valid data
-    const streetField = page.locator('[data-test="street"]');
-    await page.waitForLoadState("networkidle");
-    const streetValue = await streetField.inputValue();
+    const streetValue = await profilePage.getStreet();
     chaiExpect(streetValue).to.match(/.+/);
 
-    const postalCodeField = page.locator('[data-test="postal_code"]');
-    const postalCodeValue = await postalCodeField.inputValue();
+    const postalCodeValue = await profilePage.getPostalCode();
     chaiExpect(postalCodeValue).to.match(/.+/);
 
-    // Adding new Street and Postal Code:
-    await page.locator('[data-test="street"]').fill("Arcos " + `${randomAppend}`);
-    await page.locator('[data-test="postal_code"]').fill(randomAppend);
+    // Setting new Street and Postal Code:
+    await profilePage.setStreetRandom();
+    await profilePage.setPostalCodeRandom();
 
     // And the User clicks the "Update profile" button
-    await page.locator('[data-test="update-profile-submit"]').click();
-
+    const updateMsgVisible = await profilePage.submitProfiledUpdate();
     // Then the message "Your profile is successfully updated!" is displayed
-    const profileUpdatedMsg = page.getByText("Your profile is successfully updated!");
-    await profileUpdatedMsg.waitFor({ state: "visible" });
-    const updateMsgVisible = await profileUpdatedMsg.isVisible();
     chaiExpect(updateMsgVisible).to.be.true;
   });
 });

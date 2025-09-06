@@ -1,84 +1,79 @@
 import { test, expect } from "@playwright/test";
-import chai from "chai";
+import chai, { assert } from "chai";
+
+import LoginPage from "../src/po/pages/LoginPage";
+import RegisterPage from "../src/po/pages/RegisterPage";
+import HomePage from "../src/po/pages/HomePage";
+
 chai.should();
 
 test.describe("home page", () => {
-  test.beforeEach(async ({ page, context }) => {
+  test.beforeEach(async ({ page, context, baseURL }) => {
+    const registerPage = new RegisterPage(page);
+    const loginPage = new LoginPage(page);
+
     await context.clearCookies();
 
-    await page.goto("https://practicesoftwaretesting.com/auth/register");
+    await registerPage.navigateTo(baseURL + "/auth/register");
 
-    await page.waitForLoadState();
-    await page.locator('[data-test="first-name"]').fill("FirstName");
-    await page.locator('[data-test="last-name"]').fill("LastName");
-    await page.locator('[data-test="dob"]').fill("2000-01-01");
-    await page.locator('[data-test="street"]').fill("Arcos");
-    await page.locator('[data-test="postal_code"]').fill("20000");
-    await page.locator('[data-test="city"]').fill("Aguascalientes");
-    await page.locator('[data-test="state"]').fill("Ags");
-    await page.locator('[data-test="country"]').selectOption("MX");
-    await page.locator('[data-test="phone"]').fill("123456");
-    await page.locator('[data-test="email"]').fill("email@example.com");
-    await page.locator('[data-test="password"]').fill("123_Tests");
+    await registerPage.fillProfileFields({
+      firstName: "FirstName",
+      lastName: "LastName",
+      dateOfBirth: "2000-01-01",
+      street: "Arcos",
+      postalCode: "20000",
+      city: "Aguascalientes",
+      state: "Ags",
+      country: "MX",
+      phone: "123456",
+      email: "email@example.com",
+      password: "123_Tests",
+    });
 
     try {
-      await page.locator('[data-test="register-submit"]').click();
-      await expect(page).toHaveURL("https://practicesoftwaretesting.com/auth/login");
+      await registerPage.registerBtnClick();
+      await expect(page).toHaveURL(baseURL + "/auth/login");
       console.log("Account created");
     } catch (err) {
       console.log("The account was already created");
     }
 
     // Given the user is logged
-    await page.goto("/auth/login");
-    await page.locator('[data-test="email"]').fill("email@example.com");
-    await page.locator('[data-test="password"]').fill("123_Tests");
-    await page.locator('[data-test="login-submit"]').click();
-    await page.waitForURL("https://practicesoftwaretesting.com/account");
+    await loginPage.navigateTo(baseURL + "/auth/login");
+    await loginPage.enterCredentials("email@example.com", "123_Tests");
     const accountURL = page.url();
-    accountURL.should.equal("https://practicesoftwaretesting.com/account");
+    assert.equal(accountURL, "https://practicesoftwaretesting.com/account");
   });
 
-  test("Showing products according to filters", async ({ page }) => {
+  test("Showing products according to filters", async ({ page, baseURL }) => {
+    const homePage = new HomePage(page);
+
     // And the User is on the Home page
-    await page.goto("/");
-    await page.waitForLoadState();
+    await homePage.navigateTo(baseURL);
 
-    // When the User adds only the "Tool Belts" filter
-    const checkboxToolBelts = page.getByRole("checkbox", { name: "Tool Belts" });
-    await checkboxToolBelts.waitFor({ state: "visible" });
-    const checkboxVisible = await checkboxToolBelts.isVisible();
-    checkboxVisible.should.be.true;
-
-    await checkboxToolBelts.check();
+    // // When the User adds only the "Tool Belts" filter
+    const checkboxToolBeltsVisible = await homePage.checkboxIsVisible(homePage.toolBeltsCheckbox);
+    checkboxToolBeltsVisible.should.be.true;
+    await homePage.addProductsFilter(homePage.toolBeltsCheckbox);
 
     // Then only the "Leather toolbelt" product will be shown
-    const toolBelt = page.locator('[data-test="product-name"]', {
-      hasText: "Leather toolbelt",
-    });
-    await toolBelt.waitFor({ state: "visible" });
-    const toolBeltvisible = await toolBelt.isVisible();
+    const toolBeltvisible = await homePage.productIsVisible("Leather toolbelt");
     toolBeltvisible.should.be.true;
   });
 
-  test("Not showing products according to filters", async ({ page }) => {
+  test("Not showing products according to filters", async ({ page, baseURL }) => {
+    const homePage = new HomePage(page);
+
     // And the User is on the Home page
-    await page.goto("/");
+    await homePage.navigateTo(baseURL);
 
     // When the User adds only the "Workbench" filter
-    const checkboxWorkbench = page.getByRole("checkbox", { name: "Workbench" });
-    await checkboxWorkbench.waitFor({ state: "visible" });
-    const checkboxWorkbenchVisible = await checkboxWorkbench.isVisible();
+    const checkboxWorkbenchVisible = await homePage.checkboxIsVisible(homePage.workbenchCheckbox);
     checkboxWorkbenchVisible.should.be.true;
-
-    await checkboxWorkbench.check();
+    await homePage.addProductsFilter(homePage.workbenchCheckbox);
 
     // Then the "There are no products found." message is displayed
-    const noProducts = page.locator('[data-test="no-results"]', {
-      hasText: "There are no products found.",
-    });
-    await noProducts.waitFor({ state: "visible" });
-    const noProductsVisible = await noProducts.isVisible();
+    const noProductsVisible = await homePage.noProductsFoundVisible();
     noProductsVisible.should.be.true;
   });
 });

@@ -1,6 +1,7 @@
 class BasePage {
   constructor(page) {
     this.page = page;
+    this.logoLink = page.getByRole("link", { name: "Practice Software Testing -" });
   }
 
   async navigateTo(url) {
@@ -18,6 +19,11 @@ class BasePage {
 
   async getAttribute(element, attribute) {
     return await element.getAttribute(attribute);
+  }
+
+  async logoLinkClick() {
+    await this.logoLink.click();
+    await this.page.waitForLoadState();
   }
 
   // async waitForVisible(element) {
