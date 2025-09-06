@@ -1,9 +1,10 @@
 import { test, expect } from "@playwright/test";
 import chai, { assert } from "chai";
 
-import LoginPage from "../src/po/pages/LoginPage";
-import RegisterPage from "../src/po/pages/RegisterPage";
-import HomePage from "../src/po/pages/HomePage";
+import LoginPage from "../po/pages/LoginPage";
+import RegisterPage from "../po/pages/RegisterPage";
+import HomePage from "../po/pages/HomePage";
+import { testUser } from "./data/userData";
 
 chai.should();
 
@@ -17,17 +18,7 @@ test.describe("home page", () => {
     await registerPage.navigateTo(baseURL + "/auth/register");
 
     await registerPage.fillProfileFields({
-      firstName: "FirstName",
-      lastName: "LastName",
-      dateOfBirth: "2000-01-01",
-      street: "Arcos",
-      postalCode: "20000",
-      city: "Aguascalientes",
-      state: "Ags",
-      country: "MX",
-      phone: "123456",
-      email: "email@example.com",
-      password: "123_Tests",
+      ...testUser,
     });
 
     try {

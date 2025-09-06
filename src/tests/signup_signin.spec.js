@@ -1,9 +1,11 @@
 import { test } from "@playwright/test";
 import { expect as chaiExpect } from "chai";
 
-import HomePage from "../src/po/pages/HomePage";
-import LoginPage from "../src/po/pages/LoginPage";
-import RegisterPage from "../src/po/pages/RegisterPage";
+import HomePage from "../po/pages/HomePage";
+import LoginPage from "../po/pages/LoginPage";
+import RegisterPage from "../po/pages/RegisterPage";
+
+import { testUser } from "./data/userData.js";
 
 test.describe("sign up/sign in tests", () => {
   test("user creates an account", async ({ page, baseURL }) => {
@@ -19,17 +21,8 @@ test.describe("sign up/sign in tests", () => {
     await loginPage.registerLinkClick();
 
     await registerPage.fillProfileFields({
-      firstName: "FirstName",
-      lastName: "LastName",
-      dateOfBirth: "2000-01-01",
-      street: "Arcos",
-      postalCode: "20000",
-      city: "Aguascalientes",
-      state: "Ags",
-      country: "MX",
-      phone: "123456",
+      ...testUser,
       email: uniqueEmail,
-      password: "123_Tests",
     });
     await registerPage.registerBtnClick();
 
@@ -54,17 +47,8 @@ test.describe("sign up/sign in tests", () => {
     // And the User is on the Registration page
     // When the User fills the required fields with valid data
     await registerPage.fillProfileFields({
-      firstName: "FirstName",
-      lastName: "LastName",
-      dateOfBirth: "2000-22-01", // But the Date of Birth is invalid
-      street: "Arcos",
-      postalCode: "20000",
-      city: "Aguascalientes",
-      state: "Ags",
-      country: "MX",
-      phone: "123456",
-      email: uniqueEmail,
-      password: "123_Tests",
+      ...testUser,
+      dateOfBirth: "2000-22-01", // But the date of birth is invalid
     });
     await registerPage.registerBtnClick();
 

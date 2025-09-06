@@ -1,11 +1,12 @@
 import { test, expect } from "@playwright/test";
 import { assert, expect as chaiExpect } from "chai";
 
-import LoginPage from "../src/po/pages/LoginPage";
-import RegisterPage from "../src/po/pages/RegisterPage";
-import HomePage from "../src/po/pages/HomePage";
-import ProductPage from "../src/po/pages/ProductPage";
-import CheckoutPage from "../src/po/pages/CheckoutPage";
+import LoginPage from "../po/pages/LoginPage";
+import RegisterPage from "../po/pages/RegisterPage";
+import HomePage from "../po/pages/HomePage";
+import ProductPage from "../po/pages/ProductPage";
+import CheckoutPage from "../po/pages/CheckoutPage";
+import { testUser } from "./data/userData";
 
 test.describe("checkout page", () => {
   test.beforeEach(async ({ page, context, baseURL }) => {
@@ -17,17 +18,7 @@ test.describe("checkout page", () => {
     await registerPage.navigateTo(baseURL + "/auth/register");
 
     await registerPage.fillProfileFields({
-      firstName: "FirstName",
-      lastName: "LastName",
-      dateOfBirth: "2000-01-01",
-      street: "Arcos",
-      postalCode: "20000",
-      city: "Aguascalientes",
-      state: "Ags",
-      country: "MX",
-      phone: "123456",
-      email: "email@example.com",
-      password: "123_Tests",
+      ...testUser,
     });
 
     try {
