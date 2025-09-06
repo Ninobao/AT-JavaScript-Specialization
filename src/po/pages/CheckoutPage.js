@@ -29,12 +29,6 @@ class CheckoutPage extends BasePage {
     await productDelete.click();
   }
 
-  async alertIsVisible(alertText) {
-    const alert = this.page.getByRole("alert", { name: `${alertText}` });
-    await alert.waitFor({ state: "visible" });
-    return await alert.isVisible();
-  }
-
   async cartEmptyVisible() {
     await this.cartEmptyMsg.waitFor({ state: "visible", timeout: 5000 });
     return await this.cartEmptyMsg.isVisible();

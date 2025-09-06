@@ -15,7 +15,7 @@ test.describe("sign up/sign in tests", () => {
 
     // Given the User does not have an account
     await homePage.navigateTo(baseURL);
-    await homePage.signInLinkClick();
+    await homePage.header.signInLinkClick();
     await loginPage.registerLinkClick();
 
     await registerPage.fillProfileFields({
@@ -34,7 +34,6 @@ test.describe("sign up/sign in tests", () => {
     await registerPage.registerBtnClick();
 
     // Then the User gets redirected to the login page
-    // await page.waitForURL("/auth/login");
     await loginPage.waitForURL(baseURL + `/auth/login`);
     const loginURL = page.url();
     chaiExpect(loginURL).to.equal("https://practicesoftwaretesting.com/auth/login");
@@ -49,7 +48,7 @@ test.describe("sign up/sign in tests", () => {
 
     // Given the User does not have an account
     await homePage.navigateTo(baseURL);
-    await homePage.signInLinkClick();
+    await homePage.header.signInLinkClick();
     await loginPage.registerLinkClick();
 
     // And the User is on the Registration page
@@ -68,11 +67,8 @@ test.describe("sign up/sign in tests", () => {
       password: "123_Tests",
     });
     await registerPage.registerBtnClick();
-    // await loginPage.waitForURL();
-    // await this.page.waitForURL("/auth/login");
 
     // Then the message "Please enter a valid date in YYYY-MM-DD format." is displayed
-    // const dobError = registerPage.dobError;
     const dobErrorIsVisible = await registerPage.dobError.isVisible();
     chaiExpect(dobErrorIsVisible).to.be.true;
   });

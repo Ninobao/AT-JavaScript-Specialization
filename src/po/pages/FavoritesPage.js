@@ -7,14 +7,6 @@ class FavoritesPage extends BasePage {
     this.delete = page.locator('[data-test="delete"]');
   }
 
-  // async waitForNoFavoritesMsgVisible() {
-  //   await this.noFavoritesMessage.waitFor({ state: "visible" });
-  // }
-
-  // async noFavoritesMsgIsVisible() {
-  //   return await this.noFavoritesMessage.isVisible();
-  // }
-
   async productIsVisible(product) {
     const productHandler = this.page.getByText(product);
     await productHandler.waitFor({ state: "visible" });

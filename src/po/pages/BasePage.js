@@ -1,7 +1,6 @@
 class BasePage {
   constructor(page) {
     this.page = page;
-    this.logoLink = page.getByRole("link", { name: "Practice Software Testing -" });
   }
 
   async navigateTo(url) {
@@ -21,18 +20,11 @@ class BasePage {
     return await element.getAttribute(attribute);
   }
 
-  async logoLinkClick() {
-    await this.logoLink.click();
-    await this.page.waitForLoadState();
+  async alertIsVisible(alertText) {
+    const alert = this.page.getByRole("alert", { name: `${alertText}` });
+    await alert.waitFor({ state: "visible" });
+    return await alert.isVisible();
   }
-
-  // async waitForVisible(element) {
-  //   await element.waitFor({ state: "visible" });
-  // }
-
-  // async isVisible(element) {
-  //   await element.isVisible();
-  // }
 }
 
 module.exports = BasePage;

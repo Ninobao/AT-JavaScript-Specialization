@@ -67,7 +67,7 @@ test.describe("checkout page", () => {
     chaiExpect(productAddedVisible).to.be.true;
 
     // Return to Home Page
-    await productPage.logoLinkClick();
+    await productPage.header.logoLinkClick();
 
     // Two Bolt Cutters
     const boltCuttersVisible = await homePage.productIsVisible("Bolt Cutters");
@@ -126,11 +126,5 @@ test.describe("checkout page", () => {
     // Cart completely empty:
     const cartEmptyVisible = await checkoutPage.cartEmptyVisible();
     chaiExpect(cartEmptyVisible).to.be.true;
-
-    // const cartEmpty = page.getByText("The cart is empty. Nothing to");
-    // await cartEmpty.waitFor({ state: "visible", timeout: 5000 });
-    // const cartEmptyVisible = await cartEmpty.isVisible();
-    // chaiExpect(cartEmptyVisible).to.be.true;
-    /////////////////////
   });
 });

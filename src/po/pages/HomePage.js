@@ -1,19 +1,16 @@
 import BasePage from "./BasePage";
+import HeaderComponent from "../components/HeaderComponent";
 
 class HomePage extends BasePage {
   constructor(page) {
     super(page);
-    this.signInLink = page.locator('[data-test="nav-sign-in"]');
     this.toolBeltsCheckbox = page.getByRole("checkbox", { name: "Tool Belts" });
     this.workbenchCheckbox = page.getByRole("checkbox", { name: "Workbench" });
     this.noProductsFoundMsg = page.locator('[data-test="no-results"]', {
       hasText: "There are no products found.",
     });
-  }
 
-  async signInLinkClick() {
-    await this.signInLink.click();
-    await this.page.waitForLoadState();
+    this.header = new HeaderComponent(page);
   }
 
   async productIsVisible(product) {

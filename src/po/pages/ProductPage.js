@@ -1,4 +1,5 @@
 import BasePage from "./BasePage";
+import HeaderComponent from "../components/HeaderComponent";
 
 class ProductPage extends BasePage {
   constructor(page) {
@@ -9,16 +10,12 @@ class ProductPage extends BasePage {
     this.decrease = page.locator('[data-test="decrease-quantity"]');
     this.addToCart = page.locator('[data-test="add-to-cart"]');
     this.cartLink = page.locator('[data-test="nav-cart"]');
+
+    this.header = new HeaderComponent(page);
   }
 
   async addToFavoritesClick() {
     await this.addToFavorites.click();
-  }
-
-  async alertIsVisible(alertText) {
-    const alert = this.page.getByRole("alert", { name: `${alertText}` });
-    await alert.waitFor({ state: "visible" });
-    return await alert.isVisible();
   }
 
   async outOfStockIsVisible() {
@@ -54,15 +51,6 @@ class ProductPage extends BasePage {
     await this.page.waitForURL("/checkout");
     await this.page.waitForLoadState();
   }
-
-  //   async waitForNoFavoritesMsgVisible() {
-  //     // await this.waitForVisible(this.noFavoritesMessage);
-  //     await this.noFavoritesMessage.waitFor({ state: "visible" });
-  //   }
-
-  //   async noFavoritesMsgIsVisible() {
-  //     return await this.noFavoritesMessage.isVisible();
-  //   }
 }
 
 module.exports = ProductPage;
