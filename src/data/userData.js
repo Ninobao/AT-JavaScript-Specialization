@@ -8,6 +8,6 @@ export const testUser = {
   state: "Ags",
   country: "MX",
   phone: "123456",
-  email: "test@example.com",
+  email: "email@example.com",
   password: "123_Tests",
 };

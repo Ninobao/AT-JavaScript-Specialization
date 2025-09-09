@@ -5,7 +5,8 @@ import RegisterPage from "../po/pages/RegisterPage";
 import LoginPage from "../po/pages/LoginPage";
 import AccountPage from "../po/pages/AccountPage";
 import ProfilePage from "../po/pages/ProfilePage";
-import { testUser } from "./data/userData";
+
+import { testUser } from "../data/userData";
 
 test.describe("user profile", () => {
   test.beforeEach(async ({ page, context, baseURL }) => {
@@ -21,7 +22,7 @@ test.describe("user profile", () => {
     });
 
     try {
-      await registerPage.registerBtnClick();
+      await registerPage.clickOn(registerPage.registerBtn);
       await expect(page).toHaveURL(baseURL + "/auth/login");
       console.log("Account created");
     } catch (err) {
@@ -31,6 +32,8 @@ test.describe("user profile", () => {
     // Given the user is logged
     await loginPage.navigateTo(baseURL + "/auth/login");
     await loginPage.enterCredentials("email@example.com", "123_Tests");
+    await loginPage.clickOn(loginPage.loginSubmit);
+    await loginPage.waitForURL(baseURL + "/account");
     const accountURL = page.url();
     assert.equal(accountURL, "https://practicesoftwaretesting.com/account");
   });
@@ -40,7 +43,8 @@ test.describe("user profile", () => {
     const profilePage = new ProfilePage(page);
 
     // And the User is on the Profile page
-    await accountPage.profileLinkClick();
+    await accountPage.clickOn(accountPage.profileLink);
+    await accountPage.waitForURL(baseURL + "/account/profile");
     const profileURL = profilePage.getURL();
     chaiExpect(profileURL).to.equal("https://practicesoftwaretesting.com/account/profile");
 
@@ -56,8 +60,9 @@ test.describe("user profile", () => {
     await profilePage.setPostalCodeRandom();
 
     // And the User clicks the "Update profile" button
-    const updateMsgVisible = await profilePage.submitProfiledUpdate();
+    await profilePage.clickOn(profilePage.updateProfileBtn);
     // Then the message "Your profile is successfully updated!" is displayed
+    const updateMsgVisible = await profilePage.isVisible(profilePage.updateProfileSuccess);
     chaiExpect(updateMsgVisible).to.be.true;
   });
 });

@@ -6,7 +6,8 @@ import LoginPage from "../po/pages/LoginPage";
 import FavoritesPage from "../po/pages/FavoritesPage";
 import HomePage from "../po/pages/HomePage";
 import ProductPage from "../po/pages/ProductPage";
-import { testUser } from "./data/userData";
+
+import { testUser } from "../data/userData";
 
 test.describe("product details page", () => {
   test.beforeEach(async ({ page, context, baseURL }) => {
@@ -22,7 +23,7 @@ test.describe("product details page", () => {
     });
 
     try {
-      await registerPage.registerBtnClick();
+      await registerPage.clickOn(registerPage.registerBtn);
       await expect(page).toHaveURL(baseURL + "/auth/login");
       console.log("Account created");
     } catch (err) {
@@ -32,6 +33,8 @@ test.describe("product details page", () => {
     // Given the user is logged
     await loginPage.navigateTo(baseURL + "/auth/login");
     await loginPage.enterCredentials("email@example.com", "123_Tests");
+    await loginPage.clickOn(loginPage.loginSubmit);
+    await loginPage.waitForURL(baseURL + "/account");
     const accountURL = page.url();
     assert.equal(accountURL, "https://practicesoftwaretesting.com/account");
   });
@@ -43,7 +46,7 @@ test.describe("product details page", () => {
 
     // And the Combination Pliers product is not already in Favorites
     await favoritesPage.navigateTo(baseURL + "/account/favorites");
-    const noFavsIsVisible = await favoritesPage.noFavoritesIsVisible();
+    const noFavsIsVisible = await favoritesPage.isVisible(favoritesPage.noFavoritesMessage);
     assert.isTrue(noFavsIsVisible, "Expected 'There are no favorites yet.' message to be visible");
 
     // And the User is on the Combination Pliers page
@@ -54,7 +57,8 @@ test.describe("product details page", () => {
     await homePage.clickOnProduct("Combination Pliers");
 
     // When the User adds the Combination Pliers to Favorites
-    await productPage.addToFavoritesClick();
+    // await productPage.addToFavoritesClick();
+    await productPage.clickOn(productPage.addToFavorites);
 
     // Then the message "Product added to your favorites list." is displayed
     const addedToFavoritesVisible = await productPage.alertIsVisible("Product added to your");
@@ -70,8 +74,8 @@ test.describe("product details page", () => {
     assert.isTrue(combinationPliersIsFavorite, "Expected Combination Pliers to be visible.");
 
     // (Remove the product for future re-test)
-    await favoritesPage.deleteSingleFavorite();
-    const noFavsisVisible = await favoritesPage.noFavoritesIsVisible();
+    await favoritesPage.clickOn(favoritesPage.deleteBtn);
+    const noFavsisVisible = await favoritesPage.isVisible(favoritesPage.noFavoritesMessage);
     assert.isTrue(noFavsisVisible, "Expected 'There are no favorites yet.' message to be visible");
   });
 
@@ -88,7 +92,8 @@ test.describe("product details page", () => {
     await homePage.clickOnProduct("Long Nose Pliers");
 
     // When the Long Nose Pliers page has the "Out of stock" message
-    const outOfStockIsVisible = await productPage.outOfStockIsVisible();
+    // const outOfStockIsVisible = await productPage.outOfStockIsVisible();
+    const outOfStockIsVisible = await productPage.isVisible(productPage.outOfStock);
     assert.isTrue(outOfStockIsVisible, "Expected Out Of Stock message to be visible.");
 
     // Then the Quantity selector and the "Add to cart" button are disabled

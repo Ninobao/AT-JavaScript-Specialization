@@ -28,12 +28,6 @@ class ProfilePage extends BasePage {
     const randomAppend = Date.now().toString().slice(-5);
     await this.postalCode.fill(randomAppend);
   }
-
-  async submitProfiledUpdate() {
-    await this.updateProfileBtn.click();
-    await this.updateProfileSuccess.waitFor({ state: "visible" });
-    return await this.updateProfileSuccess.isVisible();
-  }
 }
 
 module.exports = ProfilePage;

@@ -4,22 +4,12 @@ class FavoritesPage extends BasePage {
   constructor(page) {
     super(page);
     this.noFavoritesMessage = page.getByText("There are no favorites yet.");
-    this.delete = page.locator('[data-test="delete"]');
+    this.deleteBtn = page.locator('[data-test="delete"]');
   }
 
   async productIsVisible(product) {
     const productHandler = this.page.getByText(product);
-    await productHandler.waitFor({ state: "visible" });
-    return await productHandler.isVisible();
-  }
-
-  async deleteSingleFavorite() {
-    await this.delete.click();
-  }
-
-  async noFavoritesIsVisible() {
-    await this.noFavoritesMessage.waitFor({ state: "visible" });
-    return await this.noFavoritesMessage.isVisible();
+    return await this.isVisible(productHandler);
   }
 }
 

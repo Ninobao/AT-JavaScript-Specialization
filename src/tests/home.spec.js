@@ -4,7 +4,8 @@ import chai, { assert } from "chai";
 import LoginPage from "../po/pages/LoginPage";
 import RegisterPage from "../po/pages/RegisterPage";
 import HomePage from "../po/pages/HomePage";
-import { testUser } from "./data/userData";
+
+import { testUser } from "../data/userData";
 
 chai.should();
 
@@ -22,7 +23,7 @@ test.describe("home page", () => {
     });
 
     try {
-      await registerPage.registerBtnClick();
+      await registerPage.clickOn(registerPage.registerBtn);
       await expect(page).toHaveURL(baseURL + "/auth/login");
       console.log("Account created");
     } catch (err) {
@@ -32,6 +33,8 @@ test.describe("home page", () => {
     // Given the user is logged
     await loginPage.navigateTo(baseURL + "/auth/login");
     await loginPage.enterCredentials("email@example.com", "123_Tests");
+    await loginPage.clickOn(loginPage.loginSubmit);
+    await loginPage.waitForURL(baseURL + "/account");
     const accountURL = page.url();
     assert.equal(accountURL, "https://practicesoftwaretesting.com/account");
   });
@@ -43,7 +46,7 @@ test.describe("home page", () => {
     await homePage.navigateTo(baseURL);
 
     // // When the User adds only the "Tool Belts" filter
-    const checkboxToolBeltsVisible = await homePage.checkboxIsVisible(homePage.toolBeltsCheckbox);
+    const checkboxToolBeltsVisible = await homePage.isVisible(homePage.toolBeltsCheckbox);
     checkboxToolBeltsVisible.should.be.true;
     await homePage.addProductsFilter(homePage.toolBeltsCheckbox);
 
@@ -59,12 +62,12 @@ test.describe("home page", () => {
     await homePage.navigateTo(baseURL);
 
     // When the User adds only the "Workbench" filter
-    const checkboxWorkbenchVisible = await homePage.checkboxIsVisible(homePage.workbenchCheckbox);
+    const checkboxWorkbenchVisible = await homePage.isVisible(homePage.workbenchCheckbox);
     checkboxWorkbenchVisible.should.be.true;
     await homePage.addProductsFilter(homePage.workbenchCheckbox);
 
     // Then the "There are no products found." message is displayed
-    const noProductsVisible = await homePage.noProductsFoundVisible();
+    const noProductsVisible = await homePage.isVisible(homePage.noProductsFoundMsg);
     noProductsVisible.should.be.true;
   });
 });

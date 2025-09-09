@@ -8,30 +8,22 @@ class CheckoutPage extends BasePage {
 
   async linePriceIsVisible(price) {
     const linePrice = this.page.locator('[data-test="line-price"]', { hasText: `${price}` });
-    await linePrice.waitFor({ state: "visible", timeout: 3500 });
-    return await linePrice.isVisible();
+    return this.isVisible(linePrice);
   }
 
   async cartTotalIsVisible(price) {
-    const linePrice = this.page.locator('[data-test="cart-total"]', { hasText: `${price}` });
-    await linePrice.waitFor({ state: "visible", timeout: 3500 });
-    return await linePrice.isVisible();
+    const cartTotal = this.page.locator('[data-test="cart-total"]', { hasText: `${price}` });
+    return this.isVisible(cartTotal);
   }
 
   async deleteProductIsVisible(product) {
     const deleteProduct = this.page.getByRole("row", { name: `${product}  Quantity` }).locator("a");
-    await deleteProduct.waitFor({ state: "visible", timeout: 3500 });
-    return await deleteProduct.isVisible();
+    return this.isVisible(deleteProduct);
   }
 
   async deleteProductClick(product) {
     const productDelete = this.page.getByRole("row", { name: `${product}  Quantity` }).locator("a");
-    await productDelete.click();
-  }
-
-  async cartEmptyVisible() {
-    await this.cartEmptyMsg.waitFor({ state: "visible", timeout: 5000 });
-    return await this.cartEmptyMsg.isVisible();
+    await this.clickOn(productDelete);
   }
 }
 

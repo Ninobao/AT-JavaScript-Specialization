@@ -12,13 +12,6 @@ class LoginPage extends BasePage {
   async enterCredentials(email, password) {
     await this.email.fill(email);
     await this.password.fill(password);
-    await this.loginSubmit.click();
-    await this.page.waitForURL("https://practicesoftwaretesting.com/account");
-  }
-
-  async registerLinkClick() {
-    await this.registerLink.click();
-    await this.page.waitForLoadState();
   }
 }
 

@@ -1,5 +1,5 @@
 import BasePage from "./BasePage";
-import HeaderComponent from "../components/HeaderComponent";
+import HeaderComponent from "../components/header.component";
 
 class HomePage extends BasePage {
   constructor(page) {
@@ -15,28 +15,17 @@ class HomePage extends BasePage {
 
   async productIsVisible(product) {
     const productHandler = this.page.getByText(product);
-    await productHandler.waitFor({ state: "visible" });
-    return await productHandler.isVisible();
+    return await this.isVisible(productHandler);
   }
 
   async clickOnProduct(product) {
-    await this.page.getByText(product).click();
-    await this.page.waitForLoadState();
-  }
-
-  async checkboxIsVisible(checkBox) {
-    await checkBox.waitFor({ state: "visible" });
-    return await checkBox.isVisible();
+    const productHandler = this.page.getByText(product);
+    await this.clickOn(productHandler);
   }
 
   async addProductsFilter(checkbox) {
     await checkbox.check();
     await this.page.waitForLoadState();
-  }
-
-  async noProductsFoundVisible() {
-    await this.noProductsFoundMsg.waitFor({ state: "visible" });
-    return await this.noProductsFoundMsg.isVisible();
   }
 }
 

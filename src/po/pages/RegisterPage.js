@@ -34,10 +34,6 @@ class RegisterPage extends BasePage {
     await this.email.fill(profile.email);
     await this.password.fill(profile.password);
   }
-
-  async registerBtnClick() {
-    await this.registerBtn.click();
-  }
 }
 
 module.exports = RegisterPage;
