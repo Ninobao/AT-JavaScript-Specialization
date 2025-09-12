@@ -1,11 +1,11 @@
 import { test, expect } from "@playwright/test";
 import chai, { assert } from "chai";
 
-import LoginPage from "../po/pages/LoginPage";
-import RegisterPage from "../po/pages/RegisterPage";
-import HomePage from "../po/pages/HomePage";
+import LoginPage from "../po/pages/login.page";
+import RegisterPage from "../po/pages/register.page";
+import HomePage from "../po/pages/home.page";
 
-import { testUser } from "../data/userData";
+import { testUser } from "../data/user.data";
 
 chai.should();
 
@@ -23,7 +23,7 @@ test.describe("home page", () => {
     });
 
     try {
-      await registerPage.clickOn(registerPage.registerBtn);
+      await registerPage.registerBtn.click();
       await expect(page).toHaveURL(baseURL + "/auth/login");
       console.log("Account created");
     } catch (err) {
@@ -33,7 +33,7 @@ test.describe("home page", () => {
     // Given the user is logged
     await loginPage.navigateTo(baseURL + "/auth/login");
     await loginPage.enterCredentials("email@example.com", "123_Tests");
-    await loginPage.clickOn(loginPage.loginSubmit);
+    await loginPage.loginSubmit.click();
     await loginPage.waitForURL(baseURL + "/account");
     const accountURL = page.url();
     assert.equal(accountURL, "https://practicesoftwaretesting.com/account");

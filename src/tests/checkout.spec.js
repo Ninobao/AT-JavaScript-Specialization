@@ -1,15 +1,15 @@
 import { test, expect } from "@playwright/test";
 import { assert, expect as chaiExpect } from "chai";
 
-import LoginPage from "../po/pages/LoginPage";
-import RegisterPage from "../po/pages/RegisterPage";
-import HomePage from "../po/pages/HomePage";
-import ProductPage from "../po/pages/ProductPage";
-import CheckoutPage from "../po/pages/CheckoutPage";
+import LoginPage from "../po/pages/login.page.js";
+import RegisterPage from "../po/pages/register.page.js";
+import HomePage from "../po/pages/home.page.js";
+import ProductPage from "../po/pages/product.page.js";
+import CheckoutPage from "../po/pages/checkout.page.js";
 
 import HeaderComponent from "../po/components/header.component.js";
 
-import { testUser } from "../data/userData.js";
+import { testUser } from "../data/user.data.js";
 
 test.describe("checkout page", () => {
   test.beforeEach(async ({ page, context, baseURL }) => {
@@ -25,7 +25,7 @@ test.describe("checkout page", () => {
     });
 
     try {
-      await registerPage.clickOn(registerPage.registerBtn);
+      await registerPage.registerBtn.click();
       await expect(page).toHaveURL(baseURL + "/auth/login");
       console.log("Account created");
     } catch (err) {
@@ -35,7 +35,7 @@ test.describe("checkout page", () => {
     // Given the user is logged
     await loginPage.navigateTo(baseURL + "/auth/login");
     await loginPage.enterCredentials("email@example.com", "123_Tests");
-    await loginPage.clickOn(loginPage.loginSubmit);
+    await loginPage.loginSubmit.click();
     await loginPage.waitForURL(baseURL + "/account");
     const accountURL = page.url();
     assert.equal(accountURL, "https://practicesoftwaretesting.com/account");
@@ -61,7 +61,7 @@ test.describe("checkout page", () => {
     const addToCartVisible = await productPage.isVisible(productPage.addToCart);
     chaiExpect(addToCartVisible).to.be.true;
 
-    await productPage.clickOn(productPage.addToCart);
+    await productPage.addToCart.click();
     const productAddedVisible = await productPage.alertIsVisible("Product added to shopping");
     chaiExpect(productAddedVisible).to.be.true;
 
@@ -77,12 +77,12 @@ test.describe("checkout page", () => {
     const increaseVisible = await productPage.isVisible(productPage.increase);
     chaiExpect(increaseVisible).to.be.true;
 
-    await productPage.clickOn(productPage.increase);
+    await productPage.increase.click();
 
     const addCartVisible = await productPage.isVisible(productPage.addToCart);
     chaiExpect(addCartVisible).to.be.true;
 
-    await productPage.clickOn(productPage.addToCart);
+    await productPage.addToCart.click();
     const productAddVisible = await productPage.alertIsVisible("Product added to shopping");
     chaiExpect(productAddVisible).to.be.true;
 
@@ -90,7 +90,7 @@ test.describe("checkout page", () => {
     const navCartVisible = await productPage.isVisible(productPage.cartLink);
     chaiExpect(navCartVisible).to.be.true;
 
-    await productPage.clickOn(productPage.cartLink);
+    await productPage.cartLink.click();
     await checkoutPage.waitForURL(baseURL + "/checkout");
 
     // And the sub-total price of the Combination Pliers is $14.15

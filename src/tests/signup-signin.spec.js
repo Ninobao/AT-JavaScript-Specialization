@@ -1,31 +1,32 @@
 import { test } from "@playwright/test";
 import { expect as chaiExpect } from "chai";
 
-import HomePage from "../po/pages/HomePage";
-import LoginPage from "../po/pages/LoginPage";
-import RegisterPage from "../po/pages/RegisterPage";
+import HomePage from "../po/pages/home.page";
+import LoginPage from "../po/pages/login.page";
+import RegisterPage from "../po/pages/register.page";
+import Header from "../po/components/header.component";
 
-import { testUser } from "../data/userData";
+import { testUser } from "../data/user.data";
 
 test.describe("sign up/sign in tests", () => {
   test("user creates an account", async ({ page, baseURL }) => {
     const homePage = new HomePage(page);
     const loginPage = new LoginPage(page);
     const registerPage = new RegisterPage(page);
+    const header = new Header(page);
 
     const uniqueEmail = `user_${Date.now()}@example.com`;
 
     // Given the User does not have an account
     await homePage.navigateTo(baseURL);
-    await homePage.header.signInLinkClick();
-    // await loginPage.registerLinkClick();
-    await loginPage.clickOn(loginPage.registerLink);
+    await header.signInLinkClick();
+    await loginPage.registerLink.click();
 
     await registerPage.fillProfileFields({
       ...testUser,
       email: uniqueEmail,
     });
-    await registerPage.clickOn(registerPage.registerBtn);
+    await registerPage.registerBtn.click();
 
     // Then the User gets redirected to the login page
     await loginPage.waitForURL(baseURL + `/auth/login`);
@@ -37,14 +38,12 @@ test.describe("sign up/sign in tests", () => {
     const homePage = new HomePage(page);
     const loginPage = new LoginPage(page);
     const registerPage = new RegisterPage(page);
-
-    const uniqueEmail = `user_${Date.now()}@example.com`;
+    const header = new Header(page);
 
     // Given the User does not have an account
     await homePage.navigateTo(baseURL);
-    await homePage.header.signInLinkClick();
-    // await loginPage.registerLinkClick();
-    await loginPage.clickOn(loginPage.registerLink);
+    await header.signInLinkClick();
+    await loginPage.registerLink.click();
 
     // And the User is on the Registration page
     // When the User fills the required fields with valid data
@@ -52,7 +51,7 @@ test.describe("sign up/sign in tests", () => {
       ...testUser,
       dateOfBirth: "2000-22-01", // But the date of birth is invalid
     });
-    await registerPage.clickOn(registerPage.registerBtn);
+    await registerPage.registerBtn.click();
 
     // Then the message "Please enter a valid date in YYYY-MM-DD format." is displayed
     const dobErrorIsVisible = await registerPage.dobError.isVisible();

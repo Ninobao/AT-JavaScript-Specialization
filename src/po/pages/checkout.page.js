@@ -1,4 +1,4 @@
-import BasePage from "./BasePage";
+import BasePage from "./base.page";
 
 class CheckoutPage extends BasePage {
   constructor(page) {
@@ -23,7 +23,7 @@ class CheckoutPage extends BasePage {
 
   async deleteProductClick(product) {
     const productDelete = this.page.getByRole("row", { name: `${product}  Quantity` }).locator("a");
-    await this.clickOn(productDelete);
+    await productDelete.click();
   }
 }
 

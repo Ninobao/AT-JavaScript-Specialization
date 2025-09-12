@@ -1,12 +1,12 @@
 import { test, expect } from "@playwright/test";
 import { assert, expect as chaiExpect } from "chai";
 
-import RegisterPage from "../po/pages/RegisterPage";
-import LoginPage from "../po/pages/LoginPage";
-import AccountPage from "../po/pages/AccountPage";
-import ProfilePage from "../po/pages/ProfilePage";
+import RegisterPage from "../po/pages/register.page";
+import LoginPage from "../po/pages/login.page";
+import AccountPage from "../po/pages/account.page";
+import ProfilePage from "../po/pages/profile.page";
 
-import { testUser } from "../data/userData";
+import { testUser } from "../data/user.data";
 
 test.describe("user profile", () => {
   test.beforeEach(async ({ page, context, baseURL }) => {
@@ -22,7 +22,7 @@ test.describe("user profile", () => {
     });
 
     try {
-      await registerPage.clickOn(registerPage.registerBtn);
+      await registerPage.registerBtn.click();
       await expect(page).toHaveURL(baseURL + "/auth/login");
       console.log("Account created");
     } catch (err) {
@@ -32,7 +32,7 @@ test.describe("user profile", () => {
     // Given the user is logged
     await loginPage.navigateTo(baseURL + "/auth/login");
     await loginPage.enterCredentials("email@example.com", "123_Tests");
-    await loginPage.clickOn(loginPage.loginSubmit);
+    await loginPage.loginSubmit.click();
     await loginPage.waitForURL(baseURL + "/account");
     const accountURL = page.url();
     assert.equal(accountURL, "https://practicesoftwaretesting.com/account");
@@ -43,7 +43,7 @@ test.describe("user profile", () => {
     const profilePage = new ProfilePage(page);
 
     // And the User is on the Profile page
-    await accountPage.clickOn(accountPage.profileLink);
+    await accountPage.profileLink.click();
     await accountPage.waitForURL(baseURL + "/account/profile");
     const profileURL = profilePage.getURL();
     chaiExpect(profileURL).to.equal("https://practicesoftwaretesting.com/account/profile");
@@ -60,7 +60,7 @@ test.describe("user profile", () => {
     await profilePage.setPostalCodeRandom();
 
     // And the User clicks the "Update profile" button
-    await profilePage.clickOn(profilePage.updateProfileBtn);
+    await profilePage.updateProfileBtn.click();
     // Then the message "Your profile is successfully updated!" is displayed
     const updateMsgVisible = await profilePage.isVisible(profilePage.updateProfileSuccess);
     chaiExpect(updateMsgVisible).to.be.true;

@@ -1,5 +1,4 @@
-import BasePage from "./BasePage";
-import HeaderComponent from "../components/header.component";
+import BasePage from "./base.page";
 
 class HomePage extends BasePage {
   constructor(page) {
@@ -9,8 +8,6 @@ class HomePage extends BasePage {
     this.noProductsFoundMsg = page.locator('[data-test="no-results"]', {
       hasText: "There are no products found.",
     });
-
-    this.header = new HeaderComponent(page);
   }
 
   async productIsVisible(product) {
@@ -20,7 +17,7 @@ class HomePage extends BasePage {
 
   async clickOnProduct(product) {
     const productHandler = this.page.getByText(product);
-    await this.clickOn(productHandler);
+    await productHandler.click();
   }
 
   async addProductsFilter(checkbox) {

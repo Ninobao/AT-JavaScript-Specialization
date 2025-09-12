@@ -10,7 +10,6 @@ class BasePage {
 
   async waitForURL(url) {
     await this.page.waitForURL(url);
-    await this.page.waitForLoadState();
   }
 
   getURL() {
@@ -25,12 +24,6 @@ class BasePage {
     const alert = this.page.getByRole("alert", { name: `${alertText}` });
     await alert.waitFor({ state: "visible" });
     return await alert.isVisible();
-  }
-
-  async clickOn(element) {
-    await this.page.waitForLoadState();
-    await element.click();
-    await this.page.waitForLoadState();
   }
 
   async isVisible(element) {
