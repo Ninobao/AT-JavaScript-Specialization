@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "npx playwright test",
-    "lint": "npx eslint .",
-    "format": "npx prettier . --write"
+    "lint": "npx eslint . --fix",
+    "format": "npx prettier . --check"
   },
   "keywords": [],
   "author": "",

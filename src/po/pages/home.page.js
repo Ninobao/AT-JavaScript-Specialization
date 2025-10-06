@@ -1,12 +1,12 @@
-import BasePage from "./base.page";
+import BasePage from './base.page';
 
 class HomePage extends BasePage {
   constructor(page) {
     super(page);
-    this.toolBeltsCheckbox = page.getByRole("checkbox", { name: "Tool Belts" });
-    this.workbenchCheckbox = page.getByRole("checkbox", { name: "Workbench" });
+    this.toolBeltsCheckbox = page.getByRole('checkbox', { name: 'Tool Belts' });
+    this.workbenchCheckbox = page.getByRole('checkbox', { name: 'Workbench' });
     this.noProductsFoundMsg = page.locator('[data-test="no-results"]', {
-      hasText: "There are no products found.",
+      hasText: 'There are no products found.',
     });
   }
 

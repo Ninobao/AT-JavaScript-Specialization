@@ -17,5 +17,8 @@ export default defineConfig([
       'package-lock.json',
       '/playwright/.cache/',
     ],
+    rules: {
+      'no-unused-vars': 1,
+    },
   },
 ]);
