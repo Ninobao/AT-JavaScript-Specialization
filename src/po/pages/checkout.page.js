@@ -1,9 +1,9 @@
-import BasePage from "./base.page";
+import BasePage from './base.page';
 
 class CheckoutPage extends BasePage {
   constructor(page) {
     super(page);
-    this.cartEmptyMsg = page.getByText("The cart is empty. Nothing to");
+    this.cartEmptyMsg = page.getByText('The cart is empty. Nothing to');
   }
 
   async linePriceIsVisible(price) {
@@ -17,12 +17,12 @@ class CheckoutPage extends BasePage {
   }
 
   async deleteProductIsVisible(product) {
-    const deleteProduct = this.page.getByRole("row", { name: `${product}  Quantity` }).locator("a");
+    const deleteProduct = this.page.getByRole('row', { name: `${product}  Quantity` }).locator('a');
     return this.isVisible(deleteProduct);
   }
 
   async deleteProductClick(product) {
-    const productDelete = this.page.getByRole("row", { name: `${product}  Quantity` }).locator("a");
+    const productDelete = this.page.getByRole('row', { name: `${product}  Quantity` }).locator('a');
     await productDelete.click();
   }
 }

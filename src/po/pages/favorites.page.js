@@ -1,9 +1,9 @@
-import BasePage from "./base.page";
+import BasePage from './base.page';
 
 class FavoritesPage extends BasePage {
   constructor(page) {
     super(page);
-    this.noFavoritesMessage = page.getByText("There are no favorites yet.");
+    this.noFavoritesMessage = page.getByText('There are no favorites yet.');
     this.deleteBtn = page.locator('[data-test="delete"]');
   }
 
