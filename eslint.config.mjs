@@ -10,8 +10,12 @@ export default defineConfig([
     plugins: { js },
     extends: ['js/recommended'],
     languageOptions: { globals: globals.node },
-    rules: {
-      endOfLine: 'lf',
-    },
+    ignores: [
+      'node_modules/',
+      'test-results/',
+      'playwright-report/',
+      'package-lock.json',
+      '/playwright/.cache/',
+    ],
   },
 ]);
