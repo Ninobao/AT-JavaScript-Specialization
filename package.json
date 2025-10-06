@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npx playwright test",
     "lint": "npx eslint . --fix",
-    "format": "npx prettier . --check"
+    "format": "npx prettier . --write"
   },
   "keywords": [],
   "author": "",
