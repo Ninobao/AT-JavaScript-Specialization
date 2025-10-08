@@ -1,4 +1,4 @@
-import BasePage from "./base.page";
+import BasePage from './base.page';
 
 class RegisterPage extends BasePage {
   constructor(page) {
@@ -17,7 +17,7 @@ class RegisterPage extends BasePage {
     this.registerBtn = page.locator('[data-test="register-submit"]');
 
     this.dobError = page.locator('[data-test="dob-error"]', {
-      hasText: "Please enter a valid date",
+      hasText: 'Please enter a valid date',
     });
   }
 

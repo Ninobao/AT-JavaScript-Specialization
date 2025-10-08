@@ -1,22 +1,22 @@
-import { test, expect } from "@playwright/test";
-import chai, { assert } from "chai";
+import { test, expect } from '@playwright/test';
+import chai, { assert } from 'chai';
 
-import LoginPage from "../po/pages/login.page";
-import RegisterPage from "../po/pages/register.page";
-import HomePage from "../po/pages/home.page";
+import LoginPage from '../po/pages/login.page';
+import RegisterPage from '../po/pages/register.page';
+import HomePage from '../po/pages/home.page';
 
-import { testUser } from "../data/user.data";
+import { testUser } from '../data/user.data';
 
 chai.should();
 
-test.describe("home page", () => {
+test.describe('home page', () => {
   test.beforeEach(async ({ page, context, baseURL }) => {
     const registerPage = new RegisterPage(page);
     const loginPage = new LoginPage(page);
 
     await context.clearCookies();
 
-    await registerPage.navigateTo(baseURL + "/auth/register");
+    await registerPage.navigateTo(baseURL + '/auth/register');
 
     await registerPage.fillProfileFields({
       ...testUser,
@@ -24,22 +24,22 @@ test.describe("home page", () => {
 
     try {
       await registerPage.registerBtn.click();
-      await expect(page).toHaveURL(baseURL + "/auth/login");
-      console.log("Account created");
+      await expect(page).toHaveURL(baseURL + '/auth/login');
+      console.log('Account created');
     } catch (err) {
-      console.log("The account was already created");
+      console.log('The account was already created');
     }
 
     // Given the user is logged
-    await loginPage.navigateTo(baseURL + "/auth/login");
-    await loginPage.enterCredentials("email@example.com", "123_Tests");
+    await loginPage.navigateTo(baseURL + '/auth/login');
+    await loginPage.enterCredentials('email@example.com', '123_Tests');
     await loginPage.loginSubmit.click();
-    await loginPage.waitForURL(baseURL + "/account");
+    await loginPage.waitForURL(baseURL + '/account');
     const accountURL = page.url();
-    assert.equal(accountURL, "https://practicesoftwaretesting.com/account");
+    assert.equal(accountURL, 'https://practicesoftwaretesting.com/account');
   });
 
-  test("Showing products according to filters", async ({ page, baseURL }) => {
+  test('Showing products according to filters', async ({ page, baseURL }) => {
     const homePage = new HomePage(page);
 
     // And the User is on the Home page
@@ -51,11 +51,11 @@ test.describe("home page", () => {
     await homePage.addProductsFilter(homePage.toolBeltsCheckbox);
 
     // Then only the "Leather toolbelt" product will be shown
-    const toolBeltvisible = await homePage.productIsVisible("Leather toolbelt");
+    const toolBeltvisible = await homePage.productIsVisible('Leather toolbelt');
     toolBeltvisible.should.be.true;
   });
 
-  test("Not showing products according to filters", async ({ page, baseURL }) => {
+  test('Not showing products according to filters', async ({ page, baseURL }) => {
     const homePage = new HomePage(page);
 
     // And the User is on the Home page

@@ -1,9 +1,9 @@
-import BaseComponent from "./base.component.js";
+import BaseComponent from './base.component.js';
 
 class Header extends BaseComponent {
   constructor(page) {
     super(page);
-    this.logoLink = page.getByRole("link", { name: "Practice Software Testing -" });
+    this.logoLink = page.getByRole('link', { name: 'Practice Software Testing -' });
     this.signInLink = page.locator('[data-test="nav-sign-in"]');
   }
 

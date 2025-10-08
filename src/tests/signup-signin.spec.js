@@ -1,15 +1,15 @@
-import { test } from "@playwright/test";
-import { expect as chaiExpect } from "chai";
+import { test } from '@playwright/test';
+import { expect as chaiExpect } from 'chai';
 
-import HomePage from "../po/pages/home.page";
-import LoginPage from "../po/pages/login.page";
-import RegisterPage from "../po/pages/register.page";
-import Header from "../po/components/header.component";
+import HomePage from '../po/pages/home.page';
+import LoginPage from '../po/pages/login.page';
+import RegisterPage from '../po/pages/register.page';
+import Header from '../po/components/header.component';
 
-import { testUser } from "../data/user.data";
+import { testUser } from '../data/user.data';
 
-test.describe("sign up/sign in tests", () => {
-  test("user creates an account", async ({ page, baseURL }) => {
+test.describe('sign up/sign in tests', () => {
+  test('user creates an account', async ({ page, baseURL }) => {
     const homePage = new HomePage(page);
     const loginPage = new LoginPage(page);
     const registerPage = new RegisterPage(page);
@@ -31,10 +31,10 @@ test.describe("sign up/sign in tests", () => {
     // Then the User gets redirected to the login page
     await loginPage.waitForURL(baseURL + `/auth/login`);
     const loginURL = page.url();
-    chaiExpect(loginURL).to.equal("https://practicesoftwaretesting.com/auth/login");
+    chaiExpect(loginURL).to.equal('https://practicesoftwaretesting.com/auth/login');
   });
 
-  test("invalid Date of Birth when creating an account", async ({ page, baseURL }) => {
+  test('invalid Date of Birth when creating an account', async ({ page, baseURL }) => {
     const homePage = new HomePage(page);
     const loginPage = new LoginPage(page);
     const registerPage = new RegisterPage(page);
@@ -49,7 +49,7 @@ test.describe("sign up/sign in tests", () => {
     // When the User fills the required fields with valid data
     await registerPage.fillProfileFields({
       ...testUser,
-      dateOfBirth: "2000-22-01", // But the date of birth is invalid
+      dateOfBirth: '2000-22-01', // But the date of birth is invalid
     });
     await registerPage.registerBtn.click();
 
