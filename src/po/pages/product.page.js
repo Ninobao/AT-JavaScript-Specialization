@@ -1,4 +1,4 @@
-import BasePage from './base.page';
+import BasePage from './base.page.js';
 
 class ProductPage extends BasePage {
   constructor(page) {
@@ -12,4 +12,4 @@ class ProductPage extends BasePage {
   }
 }
 
-module.exports = ProductPage;
+export default ProductPage;

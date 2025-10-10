@@ -3,16 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "npx playwright test",
+    "test": "npx eslint . && npx playwright test",
+    "test:ci": "npx playwright test --trace on",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint . --fix",
-    "format": "npx prettier . --write"
+    "format": "npx prettier . --write",
+    "cucumber": "cucumber-js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@cucumber/cucumber": "^12.2.0",
     "@eslint/js": "^9.37.0",
     "@playwright/test": "^1.54.2",
     "@types/node": "^24.2.1",

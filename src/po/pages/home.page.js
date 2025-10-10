@@ -1,4 +1,4 @@
-import BasePage from './base.page';
+import BasePage from './base.page.js';
 
 class HomePage extends BasePage {
   constructor(page) {
@@ -26,4 +26,4 @@ class HomePage extends BasePage {
   }
 }
 
-module.exports = HomePage;
+export default HomePage;
