@@ -1,5 +1,4 @@
 import { Given, When, Then } from '@cucumber/cucumber';
-import { chromium } from '@playwright/test';
 import { expect as chaiExpect } from 'chai';
 
 import HomePage from '../../src/po/pages/home.page.js';
@@ -9,29 +8,26 @@ import Header from '../../src/po/components/header.component.js';
 
 import { testUser } from '../../src/data/user.data.js';
 
-let browser = await chromium.launch();
-let context = await browser.newContext();
-let page = await context.newPage();
-
-const homePage = new HomePage(page);
-const loginPage = new LoginPage(page);
-const header = new Header(page);
-let baseURL = 'https://practicesoftwaretesting.com';
-
-const registerPage = new RegisterPage(page);
 const uniqueEmail = `user_${Date.now()}@example.com`;
 
 Given('the User is on the home page', async function () {
-  await homePage.navigateTo(baseURL);
+  const homePage = new HomePage(this.page);
+
+  await homePage.navigateTo(this.baseURL);
 });
 
 Given('the User navigates to the Registration page', async function () {
+  const loginPage = new LoginPage(this.page);
+  const header = new Header(this.page);
+
   await header.signInLinkClick();
   await loginPage.registerLink.click();
   await loginPage.waitForURL('https://practicesoftwaretesting.com/auth/register');
 });
 
 When('the User fills all required fields with valid data', async function () {
+  const registerPage = new RegisterPage(this.page);
+
   await registerPage.fillProfileFields({
     ...testUser,
     email: uniqueEmail,
@@ -39,27 +35,34 @@ When('the User fills all required fields with valid data', async function () {
 });
 
 When('the User clicks the register button', async function () {
+  const registerPage = new RegisterPage(this.page);
+
   await registerPage.registerBtn.click();
 });
 
 Then('the User gets redirected to the login page', async function () {
-  await loginPage.waitForURL(baseURL + `/auth/login`);
-  const loginURL = page.url();
+  const loginPage = new LoginPage(this.page);
+
+  await loginPage.waitForURL(this.baseURL + `/auth/login`);
+  const loginURL = this.page.url();
   chaiExpect(loginURL).to.equal('https://practicesoftwaretesting.com/auth/login');
 });
 
-// 2nd scenario
-When('the User fills the required fields with valid data', function () {
-  // Write code here that turns the phrase above into concrete actions
-  return 'pending';
-});
+When(
+  'the User fills all required fields with valid data except the date of birth',
+  async function () {
+    const registerPage = new RegisterPage(this.page);
 
-When('the Date of Birth is invalid', function () {
-  // Write code here that turns the phrase above into concrete actions
-  return 'pending';
-});
+    await registerPage.fillProfileFields({
+      ...testUser,
+      dateOfBirth: '2000-22-01',
+    });
+  }
+);
 
-Then('the message {string} is displayed', function (string) {
-  // Write code here that turns the phrase above into concrete actions
-  return 'pending';
+Then('the message {string} is displayed', async function (string) {
+  const registerPage = new RegisterPage(this.page);
+
+  string = await registerPage.dobError.isVisible();
+  chaiExpect(string).to.be.true;
 });

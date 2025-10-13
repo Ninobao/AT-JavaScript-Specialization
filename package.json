@@ -10,7 +10,12 @@
     "lint": "npx eslint .",
     "lint:fix": "npx eslint . --fix",
     "format": "npx prettier . --write",
-    "cucumber": "cucumber-js"
+    "cucumber": "cucumber-js",
+    "cucumber:checkout": "cucumber-js --tags @checkout",
+    "cucumber:home": "cucumber-js --tags @home",
+    "cucumber:product-details": "cucumber-js --tags @product-details",
+    "cucumber:signin-signup": "cucumber-js --tags @signin-signup",
+    "cucumber:user-profile": "cucumber-js --tags @user-profile"
   },
   "keywords": [],
   "author": "",

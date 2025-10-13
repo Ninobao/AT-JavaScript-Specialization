@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import chai, { assert } from 'chai';
+import { assert, should } from 'chai';
 
 import LoginPage from '../po/pages/login.page';
 import RegisterPage from '../po/pages/register.page';
@@ -7,7 +7,7 @@ import HomePage from '../po/pages/home.page';
 
 import { testUser } from '../data/user.data';
 
-chai.should();
+should();
 
 test.describe('home page', () => {
   test.beforeEach(async ({ page, context, baseURL }) => {
