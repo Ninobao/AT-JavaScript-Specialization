@@ -1,4 +1,4 @@
-import BasePage from './base.page';
+import BasePage from './base.page.js';
 
 class FavoritesPage extends BasePage {
   constructor(page) {
@@ -13,4 +13,4 @@ class FavoritesPage extends BasePage {
   }
 }
 
-module.exports = FavoritesPage;
+export default FavoritesPage;

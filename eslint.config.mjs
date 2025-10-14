@@ -18,7 +18,7 @@ export default defineConfig([
       '/playwright/.cache/',
     ],
     rules: {
-      'no-unused-vars': 1,
+      'no-unused-vars': 0,
     },
   },
 ]);

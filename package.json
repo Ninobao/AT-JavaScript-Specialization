@@ -3,17 +3,25 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "npx eslint . && npx playwright test",
     "test:ci": "npx playwright test --trace on",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint . --fix",
-    "format": "npx prettier . --write"
+    "format": "npx prettier . --write",
+    "cucumber": "cucumber-js",
+    "cucumber:checkout": "cucumber-js --tags @checkout",
+    "cucumber:home": "cucumber-js --tags @home",
+    "cucumber:product-details": "cucumber-js --tags @product-details",
+    "cucumber:signin-signup": "cucumber-js --tags @signin-signup",
+    "cucumber:user-profile": "cucumber-js --tags @user-profile"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@cucumber/cucumber": "^12.2.0",
     "@eslint/js": "^9.37.0",
     "@playwright/test": "^1.54.2",
     "@types/node": "^24.2.1",

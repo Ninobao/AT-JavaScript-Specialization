@@ -49,7 +49,7 @@ test.describe('product details page', () => {
     const noFavsIsVisible = await favoritesPage.isVisible(favoritesPage.noFavoritesMessage);
     assert.isTrue(noFavsIsVisible, "Expected 'There are no favorites yet.' message to be visible");
 
-    // And the User is on the Combination Pliers page
+    // And the User navigates to the Combination Pliers page
     await homePage.navigateTo(baseURL);
     const combinationPliersIsVisible = await homePage.productIsVisible('Combination Pliers');
     assert.isTrue(combinationPliersIsVisible, "Expected 'Combination pliers.' to be visible");
@@ -79,7 +79,6 @@ test.describe('product details page', () => {
   });
 
   test('add an out-of-stock product to the cart', async ({ page, baseURL }) => {
-    const favoritesPage = new FavoritesPage(page);
     const homePage = new HomePage(page);
     const productPage = new ProductPage(page);
 
