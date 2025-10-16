@@ -8,6 +8,11 @@ class CustomWorld extends World {
     this.context = await this.browser.newContext();
     this.page = await this.context.newPage();
   }
+
+  async close() {
+    await this.context.close();
+    await this.browser.close();
+  }
 }
 
 setWorldConstructor(CustomWorld);
